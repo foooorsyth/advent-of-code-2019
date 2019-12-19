@@ -10,4 +10,7 @@ fn main() {
 
     let res_d2_p1 = d2::part1().unwrap();
     println!("d2_p1: {}", res_d2_p1);
+
+    let res_d2_p2 = d2::part2().unwrap();
+    println!("d2_p2: {}", res_d2_p2);
 }
