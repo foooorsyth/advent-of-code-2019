@@ -17,4 +17,7 @@ fn main() {
 
     let res_d3_p1 = d3::part1().unwrap();
     println!("d3_p1: {}", res_d3_p1);
+
+    let res_d3_p2 = d3::part2().unwrap();
+    println!("d3_p1: {}", res_d3_p2);
 }
