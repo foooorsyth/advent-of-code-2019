@@ -24,4 +24,7 @@ fn main() {
 
     let res_d4_p1 = d4::part1();
     println!("d4_p1: {}", res_d4_p1);
+
+    let res_d4_p2 = d4::part2();
+    println!("d4_p2: {}", res_d4_p2);
 }

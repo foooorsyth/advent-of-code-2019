@@ -4,18 +4,32 @@ const LOW: i32 = 256310;
 const HI: i32 = 732736;
 
 pub fn part1() -> i32 {
+    return common(false);
+}
+
+pub fn part2() -> i32 {
+    return common(true);
+}
+
+fn common(p2_criteria: bool) -> i32 {
     let (true_low, true_hi) = compact_range(&LOW, &HI);
     let mut count = 0;
     let mut cache: HashSet<i32> = HashSet::new();
+    let p5_s = dig(&true_low, &5);
     for gap in 0..=4 {
-        for i in 2..=9 {
+        for i in p5_s..=9 {
             for j in i..=9 {
                 for k in j..=9 {
                     for l in k..=9 {
                         for m in l..=9 {
                             let perm = construct(&gap, &i, &j, &k, &l, &m);
-                            if perm >= true_low && perm <= true_hi {
-                                if !cache.contains(&perm) {
+                            if perm >= true_low && perm <= true_hi && !cache.contains(&perm) {
+                                if p2_criteria {
+                                    if check_p2_criteria(&perm, &gap) {
+                                        cache.insert(perm);
+                                        count += 1;
+                                    }
+                                } else {
                                     cache.insert(perm);
                                     count += 1;
                                 }
@@ -27,6 +41,19 @@ pub fn part1() -> i32 {
         }
     }
     return count;
+}
+
+fn check_p2_criteria(perm: &i32, gap: &i32) -> bool {
+    let target = dig(perm, gap);
+    if *gap - 1 >= 0 && dig(perm, &(*gap - 1)) == target {
+        return false
+    }
+    
+    if *gap + 2 <= 5 && dig(perm, &(*gap + 2)) == target {
+        return false;
+    }
+
+    return true
 }
 
 fn construct(gap: &i32, i: &i32, j: &i32, k: &i32, l: &i32, m: &i32) -> i32 {
