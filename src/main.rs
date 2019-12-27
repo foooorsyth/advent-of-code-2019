@@ -2,6 +2,7 @@ mod d1;
 mod d2;
 mod d3;
 mod d4;
+mod intcode;
 
 fn main() {
     let res_d1_p1 = d1::part1().unwrap();
