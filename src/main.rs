@@ -1,8 +1,9 @@
+mod intcode;
 mod d1;
 mod d2;
 mod d3;
 mod d4;
-mod intcode;
+mod d5;
 
 #[cfg(test)]
 mod tests {
@@ -76,4 +77,7 @@ fn main() {
 
     let res_d4_p2 = d4::part2();
     println!("d4_p2: {}", res_d4_p2);
+
+    let res_d5_p1 = d5::part1().unwrap();
+    println!("d5_p1: {}", res_d5_p1);
 }
