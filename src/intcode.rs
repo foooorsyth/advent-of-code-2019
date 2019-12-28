@@ -22,56 +22,59 @@ pub fn execute_with_overwrite(input_file: &'static str, output: (bool, usize), o
             input_vec[*kvp.0] = *kvp.1;
         }
     }
-    let mut index: usize = 0;
+    let mut instr_ptr: usize = 0;
     let mut last_output = None;
-    let len = input_vec.len();
-    while index < len {
-        let step = instruction(&mut input_vec, &mut index, &mut last_output)?;
-        if step < 0 {
+    let input_len = input_vec.len();
+    while instr_ptr < input_len {
+        let should_continue = instruction(&mut input_vec, &mut instr_ptr, &mut last_output)?;
+        if !should_continue {
             if output.0 {
                 return Ok(input_vec[output.1])
             } else {
                 return Ok(last_output.unwrap())
             }
         }
-        index += step as usize;
     }
     panic!("wtf")
 }
 
-fn instruction(data: &mut Vec<i32>, index: &mut usize, last_output: &mut Option<i32>) -> std::io::Result<i32> {
-    let opcode = read_opcode(&data[*index]);
+fn instruction(data: &mut Vec<i32>, instr_ptr: &mut usize, last_output: &mut Option<i32>) -> std::io::Result<bool> {
+    let opcode = read_opcode(&data[*instr_ptr]);
     match opcode {
         1 => { 
             // Add
-            two_param_op_assign(data, *index, |a: &i32, b: &i32| -> i32 { *a + *b });
-            Ok(4)
+            two_param_op_assign(data, *instr_ptr, |a: &i32, b: &i32| -> i32 { *a + *b });
+            *instr_ptr += 4;
+            Ok(true)
         }
         2 => {
             // Mult
-            two_param_op_assign(data, *index, |a: &i32, b: &i32| -> i32 { *a * *b });
-            Ok(4)
+            two_param_op_assign(data, *instr_ptr, |a: &i32, b: &i32| -> i32 { *a * *b });
+            *instr_ptr += 4;
+            Ok(true)
         }
         3 => {
             // Take input and assign at position
             let mut input_str = String::new();
-            println!("Input opcode (3). Provide input");
+            println!("(3) Input opcode. Provide input");
             scanline!(input_str);
             input_str.pop(); // removes newline
             let input = input_str.parse::<i32>().unwrap();
-            let assign_index = data[*index + 1] as usize;
+            let assign_index = data[*instr_ptr + 1] as usize;
             data[assign_index] = input;
-            Ok(2)
+            *instr_ptr += 2;
+            Ok(true)
         }
         4 => {
-            // Output value at param position
-            let mode0 = read_mode(&data[*index], &0);
-            let param0 = if mode0 == 0 { data[data[*index + 1] as usize] } else { data[*index + 1] };
-            println!("Output opcode (4): value = {}", param0);
+            // Output value at param position/immediate
+            let mode0 = read_mode(&data[*instr_ptr], &0);
+            let param0 = if mode0 == 0 { data[data[*instr_ptr + 1] as usize] } else { data[*instr_ptr + 1] };
+            println!("(4) Output opcode: {}", param0);
             *last_output = Some(param0);
-            Ok(2)
+            *instr_ptr += 2;
+            Ok(true)
         }
-        99 => Ok(-1),
+        99 => Ok(false),
         _ => {
             println!("Illegal opcode ({})", opcode);
             panic!("wtf") 
