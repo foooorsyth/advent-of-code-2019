@@ -80,4 +80,7 @@ fn main() {
 
     let res_d5_p1 = d5::part1().unwrap();
     println!("d5_p1: {}", res_d5_p1);
+
+    let res_d5_p2 = d5::part2().unwrap();
+    println!("d5_p2: {}", res_d5_p2);
 }
