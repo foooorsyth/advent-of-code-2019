@@ -8,28 +8,40 @@ macro_rules! scanline {
     };
 }
 
-pub fn execute(input_file: &'static str,
-            output: (/* true = value at pos, false = last_output */ bool, /* pos */ usize)) -> std::io::Result<i32> {
-    return execute_with_overwrite(input_file, output, &None);
+#[allow(dead_code)]
+pub fn execute(data_file: &'static str,
+            output_pref: (/* true = value at pos, false = last_output */ bool, /* pos */ usize)) -> std::io::Result<i32> {
+    return execute_impl(data_file, output_pref, None, None);
 }
 
-pub fn execute_with_overwrite(input_file: &'static str, output: (bool, usize), overwrite: &Option<&HashMap<usize, i32>>) -> std::io::Result<i32> {
-    let input_string: String = fs::read_to_string(input_file)?;
-    let mut input_vec: Vec<i32> = input_string.split(",").map(|x| x.parse::<i32>().unwrap()).collect();
+pub fn execute_with_overwrite(data_file: &'static str, output_pref: (bool, usize), overwrite: HashMap<usize, i32>) -> std::io::Result<i32> {
+    return execute_impl(data_file, output_pref, Some(overwrite), None);
+}
+
+pub fn execute_with_input(data_file: &'static str, output_pref: (bool, usize), input_sequence: &Vec<i32>) -> std::io::Result<i32> {
+    return execute_impl(data_file, output_pref, None, Some(input_sequence));
+}
+
+fn execute_impl(data_file: &'static str, output_pref: (bool, usize), 
+        overwrite: Option<HashMap<usize, i32>>, 
+        input_sequence: Option<&Vec<i32>>) -> std::io::Result<i32> {
+    let data_string: String = fs::read_to_string(data_file)?;
+    let mut data: Vec<i32> = data_string.split(",").map(|x| x.parse::<i32>().unwrap()).collect();
     if overwrite.is_some() {
         let ow = overwrite.unwrap();
         for kvp in ow {
-            input_vec[*kvp.0] = *kvp.1;
+            data[kvp.0] = kvp.1;
         }
     }
     let mut instr_ptr: usize = 0;
+    let mut input_idx: usize = 0;
     let mut last_output = None;
-    let input_len = input_vec.len();
+    let input_len = data.len();
     while instr_ptr < input_len {
-        let halt = instruction(&mut input_vec, &mut instr_ptr, &mut last_output)?;
+        let halt = instruction(&mut data, &mut instr_ptr, &mut last_output, &input_sequence, &mut input_idx)?;
         if halt {
-            if output.0 {
-                return Ok(input_vec[output.1])
+            if output_pref.0 {
+                return Ok(data[output_pref.1])
             } else {
                 return Ok(last_output.unwrap())
             }
@@ -38,7 +50,8 @@ pub fn execute_with_overwrite(input_file: &'static str, output: (bool, usize), o
     panic!("wtf")
 }
 
-fn instruction(data: &mut Vec<i32>, instr_ptr: &mut usize, last_output: &mut Option<i32>) -> std::io::Result<bool> {
+fn instruction(data: &mut Vec<i32>, instr_ptr: &mut usize, last_output: &mut Option<i32>, 
+    input_sequence: &Option<&Vec<i32>>, input_idx: &mut usize) -> std::io::Result<bool> {
     let opcode = read_opcode(&data[*instr_ptr]);
     match opcode {
         1 => { 
@@ -53,11 +66,19 @@ fn instruction(data: &mut Vec<i32>, instr_ptr: &mut usize, last_output: &mut Opt
         }
         3 => {
             // Take input and assign at position
-            let mut input_str = String::new();
+            let input: i32;
             println!("(3) Input opcode. Provide input");
-            scanline!(input_str);
-            input_str.pop(); // removes newline
-            let input = input_str.parse::<i32>().unwrap();
+            if input_sequence.is_some() {
+                let input_vec = input_sequence.unwrap();
+                println!("(3) Using provided input: {}", input_vec[*input_idx]);
+                input = input_vec[*input_idx];
+                *input_idx += 1;
+            } else {
+                let mut input_str = String::new();
+                scanline!(input_str);
+                input_str.pop(); // removes newline
+                input = input_str.parse::<i32>().unwrap();
+            }
             let assign_index = data[*instr_ptr + 1] as usize;
             data[assign_index] = input;
             *instr_ptr += 2;
@@ -125,10 +146,7 @@ fn two_param_op_assign(data: &mut Vec<i32>, instr_ptr: &mut usize, op: impl Fn(&
 }
 
 fn jump_if(data: &mut Vec<i32>, instr_ptr: &mut usize, tf: bool) {
-    let mode0 = read_mode(&data[*instr_ptr], &0);
-    let mode1 = read_mode(&data[*instr_ptr], &1);
-    let param0 = if mode0 == 0 { data[data[*instr_ptr + 1] as usize] } else { data[*instr_ptr + 1] };
-    let param1 = if mode1 == 0 { data[data[*instr_ptr + 2] as usize] } else { data[*instr_ptr + 2] };
+    let (param0, param1) = read_two_params(data, instr_ptr);
     let zero = param0 == 0;
     if tf {
         *instr_ptr = if !zero { param1 as usize } else { *instr_ptr + 3 }

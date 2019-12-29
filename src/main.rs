@@ -11,6 +11,7 @@ mod tests {
     use crate::d2;
     use crate::d3;
     use crate::d4;
+    use crate::d5;
 
     #[test]
     fn test_d1_p1() {
@@ -50,6 +51,16 @@ mod tests {
     #[test]
     fn test_d4_p2() {
         assert_eq!(d4::part2(), 635);
+    }
+
+    #[test]
+    fn test_d5_p1() {
+        assert_eq!(d5::part1().unwrap(), 9025675);
+    }
+
+    #[test]
+    fn test_d5_p2() {
+        assert_eq!(d5::part2().unwrap(), 11981754);
     }
 }
 
