@@ -9,7 +9,7 @@ Day | Part 1 | Part 2 | Comments
 3 | :heavy_check_mark: | :heavy_check_mark: | Cached str rep of points for first wire, did lookups of points in second wire for intersections
 4 | :heavy_check_mark: | :heavy_check_mark: | Decently optimized but could go further by restricting loop range by considering gap value and higher power digit values
 5 | :heavy_check_mark: | :heavy_check_mark: | 
-6 | | | 
+6 | :heavy_check_mark: | | I fought the Borrow Checker, and the Borrow Checker (almost) won
 7 | | | 
 8 | | | 
 9 | | | 
