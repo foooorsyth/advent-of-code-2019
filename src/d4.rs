@@ -1,5 +1,5 @@
-use std::collections::HashSet;
 use crate::intcode;
+use std::collections::HashSet;
 
 const LOW: i32 = 256310;
 const HI: i32 = 732736;
@@ -47,39 +47,64 @@ fn common(p2_criteria: bool) -> i32 {
 fn check_p2_criteria(perm: &i32, gap: &i32) -> bool {
     let target = intcode::dig(perm, gap);
     if *gap - 1 >= 0 && intcode::dig(perm, &(*gap - 1)) == target {
-        return false
+        return false;
     }
-    
+
     if *gap + 2 <= 5 && intcode::dig(perm, &(*gap + 2)) == target {
         return false;
     }
 
-    return true
+    return true;
 }
 
 fn construct(gap: &i32, i: &i32, j: &i32, k: &i32, l: &i32, m: &i32) -> i32 {
     match gap {
         4 => {
-            return i * 10i32.pow(5) + i * 10i32.pow(4) + j * 10i32.pow(3) + k * 10i32.pow(2) + l * 10i32.pow(1) + m
+            return i * 10i32.pow(5)
+                + i * 10i32.pow(4)
+                + j * 10i32.pow(3)
+                + k * 10i32.pow(2)
+                + l * 10i32.pow(1)
+                + m
         }
         3 => {
-            return i * 10i32.pow(5) + j * 10i32.pow(4) + j * 10i32.pow(3) + k * 10i32.pow(2) + l * 10i32.pow(1) + m
+            return i * 10i32.pow(5)
+                + j * 10i32.pow(4)
+                + j * 10i32.pow(3)
+                + k * 10i32.pow(2)
+                + l * 10i32.pow(1)
+                + m
         }
         2 => {
-            return i * 10i32.pow(5) + j * 10i32.pow(4) + k * 10i32.pow(3) + k * 10i32.pow(2) + l * 10i32.pow(1) + m
+            return i * 10i32.pow(5)
+                + j * 10i32.pow(4)
+                + k * 10i32.pow(3)
+                + k * 10i32.pow(2)
+                + l * 10i32.pow(1)
+                + m
         }
         1 => {
-            return i * 10i32.pow(5) + j * 10i32.pow(4) + k * 10i32.pow(3) + l * 10i32.pow(2) + l * 10i32.pow(1) + m
+            return i * 10i32.pow(5)
+                + j * 10i32.pow(4)
+                + k * 10i32.pow(3)
+                + l * 10i32.pow(2)
+                + l * 10i32.pow(1)
+                + m
         }
         0 => {
-            return i * 10i32.pow(5) + j * 10i32.pow(4) + k * 10i32.pow(3) + l * 10i32.pow(2) + m * 10i32.pow(1) + m
+            return i * 10i32.pow(5)
+                + j * 10i32.pow(4)
+                + k * 10i32.pow(3)
+                + l * 10i32.pow(2)
+                + m * 10i32.pow(1)
+                + m
         }
-        &_ => { panic!("wtf") }
+        &_ => panic!("wtf"),
     }
 }
 
 fn ex_sum(val: &i32, pwr: &i32) -> i32 {
-    return val - intcode::dig(val, pwr) * 10i32.pow(*pwr as u32)
+    return val - intcode::dig(val, pwr) * 10i32.pow(*pwr as u32);
 }
 
 pub fn compact_range(low: &i32, hi: &i32) -> (i32, i32) {
@@ -95,7 +120,7 @@ pub fn compact_range(low: &i32, hi: &i32) -> (i32, i32) {
         compact_range_aux(&mut low_new, &pwr, &mut low_dig_min, &mut low_bt);
         compact_range_aux(&mut hi_new, &pwr, &mut hi_dig_min, &mut hi_bt);
     }
-    return (low_new, hi_new)
+    return (low_new, hi_new);
 }
 
 fn compact_range_aux(adj_val: &mut i32, pwr: &i32, dig_min: &mut i32, back_tracked: &mut bool) {

@@ -1,4 +1,4 @@
-use std::collections::{HashMap};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -12,12 +12,17 @@ struct UTreeNode {
     parent: Option<String>,
     children: Vec<String>,
     value: String,
-    visited: bool
+    visited: bool,
 }
 
 impl UTreeNode {
     pub fn new(parent: Option<String>, val: String) -> UTreeNode {
-        return UTreeNode { parent: parent, value: val, children: Vec::new(), visited: false }
+        return UTreeNode {
+            parent: parent,
+            value: val,
+            children: Vec::new(),
+            visited: false,
+        };
     }
 }
 
@@ -33,14 +38,16 @@ fn count_orbits(storage: &mut Vec<UTreeNode>, lut: &HashMap<String, usize>) -> i
             node.visited = true;
             count += depth;
             for child_id in &node.children {
-                stack.push((child_id.to_string(), depth +1));
+                stack.push((child_id.to_string(), depth + 1));
             }
         }
     }
     return count;
 }
 
-fn build_tree(data_file: &'static str) -> std::io::Result<(Vec<UTreeNode>, HashMap<String, usize>)> {
+fn build_tree(
+    data_file: &'static str,
+) -> std::io::Result<(Vec<UTreeNode>, HashMap<String, usize>)> {
     let file = File::open(data_file)?;
     let reader = BufReader::new(file);
     let mut storage: Vec<UTreeNode> = Vec::new();
@@ -50,10 +57,13 @@ fn build_tree(data_file: &'static str) -> std::io::Result<(Vec<UTreeNode>, HashM
         let orbit: Vec<String> = line.split(")").map(|s| s.to_string()).collect();
         let orbited_key = orbit[0].to_string();
         let orbiter_key = orbit[1].to_string();
-        {  // fighting the BC
+        {
+            // fighting the BC
             if lut.contains_key(&orbited_key) {
                 let orbited_node_idx = lut.get(&orbited_key).unwrap();
-                storage[*orbited_node_idx].children.push(orbiter_key.clone());
+                storage[*orbited_node_idx]
+                    .children
+                    .push(orbiter_key.clone());
             } else {
                 let mut orbited_node = UTreeNode::new(None, orbited_key.clone());
                 orbited_node.children.push(orbiter_key.clone());

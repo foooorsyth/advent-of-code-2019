@@ -10,7 +10,7 @@ pub fn part2() -> std::io::Result<i32> {
 }
 
 fn fuel_required(module_mass: &i32) -> i32 {
-    return module_mass / 3 - 2
+    return module_mass / 3 - 2;
 }
 
 fn recursive_fuel_required(module_mass: &i32) -> i32 {
@@ -31,5 +31,5 @@ fn common(f: impl Fn(&i32) -> i32) -> std::io::Result<i32> {
         let fuel_required = f(&int_val);
         sum += fuel_required;
     }
-    return Ok(sum)
+    return Ok(sum);
 }

@@ -17,8 +17,10 @@ pub fn part2() -> std::io::Result<i32> {
             let mut ow = HashMap::new();
             ow.insert(1, n);
             ow.insert(2, v);
-            if intcode::execute_with_overwrite("input/d2.txt", (true, 0), ow).unwrap() == TARGET_PART2 {
-                return Ok(100 * n + v)
+            if intcode::execute_with_overwrite("input/d2.txt", (true, 0), ow).unwrap()
+                == TARGET_PART2
+            {
+                return Ok(100 * n + v);
             }
         }
     }

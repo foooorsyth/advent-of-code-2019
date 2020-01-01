@@ -1,32 +1,51 @@
-use std::fs;
 use std::collections::HashMap;
+use std::fs;
 use std::io;
 
 macro_rules! scanline {
     ($x:expr) => {
-       io::stdin().read_line(&mut $x).unwrap();
+        io::stdin().read_line(&mut $x).unwrap();
     };
 }
 
 #[allow(dead_code)]
-pub fn execute(data_file: &'static str,
-            output_pref: (/* true = value at pos, false = last_output */ bool, /* pos */ usize)) -> std::io::Result<i32> {
+pub fn execute(
+    data_file: &'static str,
+    output_pref: (
+        /* true = value at pos, false = last_output */ bool,
+        /* pos */ usize,
+    ),
+) -> std::io::Result<i32> {
     return execute_impl(data_file, output_pref, None, None);
 }
 
-pub fn execute_with_overwrite(data_file: &'static str, output_pref: (bool, usize), overwrite: HashMap<usize, i32>) -> std::io::Result<i32> {
+pub fn execute_with_overwrite(
+    data_file: &'static str,
+    output_pref: (bool, usize),
+    overwrite: HashMap<usize, i32>,
+) -> std::io::Result<i32> {
     return execute_impl(data_file, output_pref, Some(overwrite), None);
 }
 
-pub fn execute_with_input(data_file: &'static str, output_pref: (bool, usize), input_sequence: &Vec<i32>) -> std::io::Result<i32> {
+pub fn execute_with_input(
+    data_file: &'static str,
+    output_pref: (bool, usize),
+    input_sequence: &Vec<i32>,
+) -> std::io::Result<i32> {
     return execute_impl(data_file, output_pref, None, Some(input_sequence));
 }
 
-fn execute_impl(data_file: &'static str, output_pref: (bool, usize), 
-        overwrite: Option<HashMap<usize, i32>>, 
-        input_sequence: Option<&Vec<i32>>) -> std::io::Result<i32> {
+fn execute_impl(
+    data_file: &'static str,
+    output_pref: (bool, usize),
+    overwrite: Option<HashMap<usize, i32>>,
+    input_sequence: Option<&Vec<i32>>,
+) -> std::io::Result<i32> {
     let data_string: String = fs::read_to_string(data_file)?;
-    let mut data: Vec<i32> = data_string.split(",").map(|x| x.parse::<i32>().unwrap()).collect();
+    let mut data: Vec<i32> = data_string
+        .split(",")
+        .map(|x| x.parse::<i32>().unwrap())
+        .collect();
     if overwrite.is_some() {
         let ow = overwrite.unwrap();
         for kvp in ow {
@@ -38,23 +57,34 @@ fn execute_impl(data_file: &'static str, output_pref: (bool, usize),
     let mut last_output = None;
     let input_len = data.len();
     while instr_ptr < input_len {
-        let halt = instruction(&mut data, &mut instr_ptr, &mut last_output, &input_sequence, &mut input_idx)?;
+        let halt = instruction(
+            &mut data,
+            &mut instr_ptr,
+            &mut last_output,
+            &input_sequence,
+            &mut input_idx,
+        )?;
         if halt {
             if output_pref.0 {
-                return Ok(data[output_pref.1])
+                return Ok(data[output_pref.1]);
             } else {
-                return Ok(last_output.unwrap())
+                return Ok(last_output.unwrap());
             }
         }
     }
     panic!("wtf")
 }
 
-fn instruction(data: &mut Vec<i32>, instr_ptr: &mut usize, last_output: &mut Option<i32>, 
-    input_sequence: &Option<&Vec<i32>>, input_idx: &mut usize) -> std::io::Result<bool> {
+fn instruction(
+    data: &mut Vec<i32>,
+    instr_ptr: &mut usize,
+    last_output: &mut Option<i32>,
+    input_sequence: &Option<&Vec<i32>>,
+    input_idx: &mut usize,
+) -> std::io::Result<bool> {
     let opcode = read_opcode(&data[*instr_ptr]);
     match opcode {
-        1 => { 
+        1 => {
             // Add
             two_param_op_assign(data, instr_ptr, |a: &i32, b: &i32| -> i32 { *a + *b });
             Ok(false)
@@ -87,7 +117,11 @@ fn instruction(data: &mut Vec<i32>, instr_ptr: &mut usize, last_output: &mut Opt
         4 => {
             // Output value at param position/immediate
             let mode0 = read_mode(&data[*instr_ptr], &0);
-            let param0 = if mode0 == 0 { data[data[*instr_ptr + 1] as usize] } else { data[*instr_ptr + 1] };
+            let param0 = if mode0 == 0 {
+                data[data[*instr_ptr + 1] as usize]
+            } else {
+                data[*instr_ptr + 1]
+            };
             println!("(4) Output opcode: {}", param0);
             *last_output = Some(param0);
             *instr_ptr += 2;
@@ -105,22 +139,22 @@ fn instruction(data: &mut Vec<i32>, instr_ptr: &mut usize, last_output: &mut Opt
         }
         7 => {
             // Less than
-            two_param_op_assign(data, instr_ptr, |a: &i32, b: &i32| -> i32 { 
-                return if a < b { 1 } else { 0 }
+            two_param_op_assign(data, instr_ptr, |a: &i32, b: &i32| -> i32 {
+                return if a < b { 1 } else { 0 };
             });
             Ok(false)
         }
         8 => {
             // Equals
-            two_param_op_assign(data, instr_ptr, |a: &i32, b: &i32| -> i32 { 
-                return if a == b { 1 } else { 0 }
+            two_param_op_assign(data, instr_ptr, |a: &i32, b: &i32| -> i32 {
+                return if a == b { 1 } else { 0 };
             });
             Ok(false)
         }
         99 => Ok(true),
         _ => {
             println!("Illegal opcode ({})", opcode);
-            panic!("wtf") 
+            panic!("wtf")
         }
     }
 }
@@ -128,8 +162,16 @@ fn instruction(data: &mut Vec<i32>, instr_ptr: &mut usize, last_output: &mut Opt
 fn read_two_params(data: &mut Vec<i32>, instr_ptr: &mut usize) -> (i32, i32) {
     let mode0 = read_mode(&data[*instr_ptr], &0);
     let mode1 = read_mode(&data[*instr_ptr], &1);
-    let param0 = if mode0 == 0 { data[data[*instr_ptr + 1] as usize] } else { data[*instr_ptr + 1] };
-    let param1 = if mode1 == 0 { data[data[*instr_ptr + 2] as usize] } else { data[*instr_ptr + 2] };
+    let param0 = if mode0 == 0 {
+        data[data[*instr_ptr + 1] as usize]
+    } else {
+        data[*instr_ptr + 1]
+    };
+    let param1 = if mode1 == 0 {
+        data[data[*instr_ptr + 2] as usize]
+    } else {
+        data[*instr_ptr + 2]
+    };
     return (param0, param1);
 }
 
@@ -149,14 +191,25 @@ fn jump_if(data: &mut Vec<i32>, instr_ptr: &mut usize, tf: bool) {
     let (param0, param1) = read_two_params(data, instr_ptr);
     let zero = param0 == 0;
     if tf {
-        *instr_ptr = if !zero { param1 as usize } else { *instr_ptr + 3 }
+        *instr_ptr = if !zero {
+            param1 as usize
+        } else {
+            *instr_ptr + 3
+        }
     } else {
-        *instr_ptr = if zero { param1 as usize } else { *instr_ptr + 3 }
+        *instr_ptr = if zero {
+            param1 as usize
+        } else {
+            *instr_ptr + 3
+        }
     }
 }
 
 fn read_opcode(val: &i32) -> i32 {
-    return val - dig(val, &2) * 10i32.pow(2) - dig(val, &3) * 10i32.pow(3) - dig(val, &4) * 10i32.pow(4)
+    return val
+        - dig(val, &2) * 10i32.pow(2)
+        - dig(val, &3) * 10i32.pow(3)
+        - dig(val, &4) * 10i32.pow(4);
 }
 
 fn read_mode(val: &i32, param: &i32) -> i32 {
@@ -164,5 +217,5 @@ fn read_mode(val: &i32, param: &i32) -> i32 {
 }
 
 pub fn dig(val: &i32, pwr: &i32) -> i32 {
-    return val / 10i32.pow(*pwr as u32) % 10
+    return val / 10i32.pow(*pwr as u32) % 10;
 }

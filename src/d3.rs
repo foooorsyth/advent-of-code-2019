@@ -1,6 +1,6 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::collections::HashMap;
 
 #[derive(Copy, Clone)]
 struct Point {
@@ -10,16 +10,16 @@ struct Point {
 
 impl Point {
     pub const fn origin() -> Point {
-        return Point { x: 0, y: 0 }
+        return Point { x: 0, y: 0 };
     }
 }
 
 pub fn part1() -> std::io::Result<i32> {
-    return common(1)
+    return common(1);
 }
 
 pub fn part2() -> std::io::Result<i32> {
-    return common(2)
+    return common(2);
 }
 
 fn common(part: i32) -> std::io::Result<i32> {
@@ -31,17 +31,22 @@ fn common(part: i32) -> std::io::Result<i32> {
         let instructions: Vec<String> = line.split(",").map(|s| s.to_string()).collect();
         let closest = walk(&instructions, &mut cache, &(index as i32), part);
         if index == 1 {
-            return Ok(closest)
+            return Ok(closest);
         }
     }
     panic!("wtf")
 }
 
 fn point_to_string(point: &Point) -> String {
-    return format!("{}{}{}", point.x.to_string(), ",", point.y.to_string())
-}   
+    return format!("{}{}{}", point.x.to_string(), ",", point.y.to_string());
+}
 
-fn walk(instructions: &Vec<String>, cache: &mut HashMap<String, i32>, pass: &i32, part: i32) -> i32 {
+fn walk(
+    instructions: &Vec<String>,
+    cache: &mut HashMap<String, i32>,
+    pass: &i32,
+    part: i32,
+) -> i32 {
     let mut last = Point { x: 0, y: 0 };
     let mut minimum: i32 = i32::max_value();
     let mut step_count = 0;
@@ -62,10 +67,13 @@ fn walk(instructions: &Vec<String>, cache: &mut HashMap<String, i32>, pass: &i32
             "R" => {
                 step = (1, 0);
             }
-            &_ => { panic!("wtf") }
+            &_ => panic!("wtf"),
         }
         for _ in 1..=seg_len {
-            last = Point { x: last.x + step.0, y: last.y + step.1 };
+            last = Point {
+                x: last.x + step.0,
+                y: last.y + step.1,
+            };
             step_count += 1;
             if *pass == 0 {
                 cache.insert(point_to_string(&last.clone()), step_count);
@@ -84,14 +92,14 @@ fn walk(instructions: &Vec<String>, cache: &mut HashMap<String, i32>, pass: &i32
                             }
                         }
                     }
-                    None => { }
+                    None => {}
                 }
             }
         }
     }
-    return minimum
+    return minimum;
 }
 
 fn manhattan_distance(a: &Point, b: &Point) -> i32 {
-    return  (a.x - b.x).abs() + (a.y - b.y).abs()
+    return (a.x - b.x).abs() + (a.y - b.y).abs();
 }
