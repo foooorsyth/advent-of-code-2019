@@ -1,13 +1,15 @@
-use crate::intcode;
+use crate::intcode::IntCodeCPU;
 use std::collections::HashMap;
 
 const TARGET_PART2: i32 = 19690720;
 
 pub fn part1() -> std::io::Result<i32> {
-    let mut ow = HashMap::new();
-    ow.insert(1, 12);
-    ow.insert(2, 2);
-    return intcode::execute_with_overwrite("input/d2.txt", (true, 0), ow);
+    let mut cpu = IntCodeCPU::new();
+    cpu.read_data_file("input/d2.txt")?;
+    cpu.set_data_at(1, 12);
+    cpu.set_data_at(2, 2);
+    cpu.execute();
+    return Ok(cpu.get_data_at(0));
 }
 
 pub fn part2() -> std::io::Result<i32> {
@@ -17,9 +19,12 @@ pub fn part2() -> std::io::Result<i32> {
             let mut ow = HashMap::new();
             ow.insert(1, n);
             ow.insert(2, v);
-            if intcode::execute_with_overwrite("input/d2.txt", (true, 0), ow).unwrap()
-                == TARGET_PART2
-            {
+            let mut cpu = IntCodeCPU::new();
+            cpu.read_data_file("input/d2.txt")?;
+            cpu.set_data_at(1, n);
+            cpu.set_data_at(2, v);
+            cpu.execute();
+            if cpu.get_data_at(0) == TARGET_PART2 {
                 return Ok(100 * n + v);
             }
         }

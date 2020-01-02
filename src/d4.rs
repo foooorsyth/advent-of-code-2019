@@ -1,4 +1,4 @@
-use crate::intcode;
+use crate::intcode::IntCodeCPU;
 use std::collections::HashSet;
 
 const LOW: i32 = 256310;
@@ -16,7 +16,7 @@ fn common(p2_criteria: bool) -> i32 {
     let (true_low, true_hi) = compact_range(&LOW, &HI);
     let mut count = 0;
     let mut cache: HashSet<i32> = HashSet::new();
-    let p5_s = intcode::dig(&true_low, &5);
+    let p5_s = IntCodeCPU::dig(&true_low, &5);
     for gap in 0..=4 {
         for i in p5_s..=9 {
             for j in i..=9 {
@@ -45,12 +45,12 @@ fn common(p2_criteria: bool) -> i32 {
 }
 
 fn check_p2_criteria(perm: &i32, gap: &i32) -> bool {
-    let target = intcode::dig(perm, gap);
-    if *gap - 1 >= 0 && intcode::dig(perm, &(*gap - 1)) == target {
+    let target = IntCodeCPU::dig(perm, gap);
+    if *gap - 1 >= 0 && IntCodeCPU::dig(perm, &(*gap - 1)) == target {
         return false;
     }
 
-    if *gap + 2 <= 5 && intcode::dig(perm, &(*gap + 2)) == target {
+    if *gap + 2 <= 5 && IntCodeCPU::dig(perm, &(*gap + 2)) == target {
         return false;
     }
 
@@ -104,7 +104,7 @@ fn construct(gap: &i32, i: &i32, j: &i32, k: &i32, l: &i32, m: &i32) -> i32 {
 }
 
 fn ex_sum(val: &i32, pwr: &i32) -> i32 {
-    return val - intcode::dig(val, pwr) * 10i32.pow(*pwr as u32);
+    return val - IntCodeCPU::dig(val, pwr) * 10i32.pow(*pwr as u32);
 }
 
 pub fn compact_range(low: &i32, hi: &i32) -> (i32, i32) {
@@ -124,12 +124,12 @@ pub fn compact_range(low: &i32, hi: &i32) -> (i32, i32) {
 }
 
 fn compact_range_aux(adj_val: &mut i32, pwr: &i32, dig_min: &mut i32, back_tracked: &mut bool) {
-    let dig_curr = intcode::dig(adj_val, pwr);
+    let dig_curr = IntCodeCPU::dig(adj_val, pwr);
     if dig_curr < *dig_min {
         let mut tmp = *dig_min * 10i32.pow(*pwr as u32) + ex_sum(adj_val, &pwr);
         while tmp > HI {
             *back_tracked = true;
-            let tmp_dig = intcode::dig(adj_val, &(*pwr + 1));
+            let tmp_dig = IntCodeCPU::dig(adj_val, &(*pwr + 1));
             tmp = (tmp_dig - 1) * 10i32.pow((*pwr + 1) as u32) + ex_sum(adj_val, &(*pwr + 1));
             if tmp_dig == *dig_min {
                 *dig_min -= 1;

@@ -1,13 +1,17 @@
-use crate::intcode;
+use crate::intcode::IntCodeCPU;
 
 pub fn part1() -> std::io::Result<i32> {
-    let mut input = Vec::new();
-    input.push(1);
-    return intcode::execute_with_input("input/d5.txt", (false, 0), &input);
+    let mut cpu = IntCodeCPU::new();
+    cpu.read_data_file("input/d5.txt")?;
+    cpu.enqueue_input(1);
+    cpu.execute();
+    return Ok(cpu.last_output.unwrap());
 }
 
 pub fn part2() -> std::io::Result<i32> {
-    let mut input = Vec::new();
-    input.push(5);
-    return intcode::execute_with_input("input/d5.txt", (false, 0), &input);
+    let mut cpu = IntCodeCPU::new();
+    cpu.read_data_file("input/d5.txt")?;
+    cpu.enqueue_input(5);
+    cpu.execute();
+    return Ok(cpu.last_output.unwrap());
 }
