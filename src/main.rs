@@ -69,6 +69,11 @@ mod tests {
     fn test_d6_p1() {
         assert_eq!(d6::part1().unwrap(), 145250);
     }
+
+    #[test]
+    fn test_d6_p2() {
+        assert_eq!(d6::part2().unwrap(), 274);
+    }
 }
 
 fn main() {
@@ -104,4 +109,7 @@ fn main() {
 
     let res_d6_p1 = d6::part1().unwrap();
     println!("d6_p1: {}", res_d6_p1);
+
+    let res_d6_p2 = d6::part2().unwrap();
+    println!("d6_p2: {}", res_d6_p2);
 }
