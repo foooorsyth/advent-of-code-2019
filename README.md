@@ -10,7 +10,7 @@ Day | Part 1 | Part 2 | Comments
 4 | :heavy_check_mark: | :heavy_check_mark: | Decently optimized but could go further by restricting loop range by considering gap value and higher power digit values
 5 | :heavy_check_mark: | :heavy_check_mark: | 
 6 | :heavy_check_mark: | :heavy_check_mark: | I fought the Borrow Checker, and the Borrow Checker (almost) won
-7 | | | 
+7 | :heavy_check_mark: | | 
 8 | | | 
 9 | | | 
 10 | | | 

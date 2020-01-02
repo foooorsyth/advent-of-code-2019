@@ -4,6 +4,7 @@ mod d3;
 mod d4;
 mod d5;
 mod d6;
+mod d7;
 mod intcode;
 
 #[cfg(test)]
@@ -14,6 +15,7 @@ mod tests {
     use crate::d4;
     use crate::d5;
     use crate::d6;
+    use crate::d7;
 
     #[test]
     fn test_d1_p1() {
@@ -74,6 +76,11 @@ mod tests {
     fn test_d6_p2() {
         assert_eq!(d6::part2().unwrap(), 274);
     }
+
+    #[test]
+    fn test_d7_p1() {
+        assert_eq!(d7::part1().unwrap(), 262086);
+    }
 }
 
 fn main() {
@@ -112,4 +119,7 @@ fn main() {
 
     let res_d6_p2 = d6::part2().unwrap();
     println!("d6_p2: {}", res_d6_p2);
+
+    let res_d7_p1 = d7::part1().unwrap();
+    println!("d7_p1: {}", res_d7_p1);
 }
