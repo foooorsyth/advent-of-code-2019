@@ -178,7 +178,14 @@ impl IntCodeCPU {
             }
             9 => {
                 // Adjust relative base
-
+                let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], &0);
+                let param0 = self.read_param(mode0, 0);
+                let new_relative_base = self.relative_base + param0 as usize;
+                if self.debug_log {
+                    println!("(9) Adjusting relative base, old: {}, new: {}", self.relative_base, new_relative_base);
+                }
+                self.relative_base = new_relative_base;
+                self.instr_ptr += 2;
                 false
             }
             99 => {
