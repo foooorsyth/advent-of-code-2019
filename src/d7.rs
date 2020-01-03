@@ -1,16 +1,16 @@
 use crate::intcode::{CPUState, IntCodeCPU};
 use std::collections::HashSet;
 
-pub fn part1() -> std::io::Result<i32> {
+pub fn part1() -> std::io::Result<i64> {
     return phase_permutations(0, 4);
 }
 
-pub fn part2() -> std::io::Result<i32> {
+pub fn part2() -> std::io::Result<i64> {
     return phase_permutations(5, 9);
 }
 
-fn phase_permutations(low_inclusive: i32, hi_inclusive: i32) -> std::io::Result<i32> {
-    let mut avail_phases = HashSet::<i32>::new();
+fn phase_permutations(low_inclusive: i64, hi_inclusive: i64) -> std::io::Result<i64> {
+    let mut avail_phases = HashSet::<i64>::new();
     for phase in low_inclusive..=hi_inclusive {
         avail_phases.insert(phase);
     }
@@ -20,7 +20,7 @@ fn phase_permutations(low_inclusive: i32, hi_inclusive: i32) -> std::io::Result<
         let cpu = IntCodeCPU::new();
         cpus.push(cpu);
     }
-    let mut max_output = i32::min_value();
+    let mut max_output = i64::min_value();
     phase_permutations_aux(
         &mut cpus,
         &data,
@@ -35,11 +35,11 @@ fn phase_permutations(low_inclusive: i32, hi_inclusive: i32) -> std::io::Result<
 #[allow(dead_code)]
 fn phase_permutations_aux(
     cpus: &mut Vec<IntCodeCPU>,
-    data: &Vec<i32>,
-    avail_phases: &HashSet<i32>,
+    data: &Vec<i64>,
+    avail_phases: &HashSet<i64>,
     depth: usize,
-    curr_phase_vec: &mut Vec<i32>,
-    max_output: &mut i32,
+    curr_phase_vec: &mut Vec<i64>,
+    max_output: &mut i64,
 ) {
     let cpu_count = cpus.len();
     for phase in avail_phases {

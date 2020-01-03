@@ -9,15 +9,15 @@ pub enum CPUState {
     Halted,
 }
 
-const ZERO_BUFFER_MULTIPLE: i32 = 1;
+const ZERO_BUFFER_MULTIPLE: i64 = 1;
 
 pub struct IntCodeCPU {
-    data: Vec<i32>,
+    data: Vec<i64>,
     data_end: usize,
     instr_ptr: usize,
     relative_base: usize,
-    input: VecDeque<i32>,
-    pub last_output: Option<i32>,
+    input: VecDeque<i64>,
+    pub last_output: Option<i64>,
     pub state: CPUState,
     debug_log: bool,
 }
@@ -36,11 +36,11 @@ impl IntCodeCPU {
         };
     }
 
-    pub fn read_data_from_file(data_file: &'static str) -> std::io::Result<Vec<i32>> {
+    pub fn read_data_from_file(data_file: &'static str) -> std::io::Result<Vec<i64>> {
         let data_string: String = fs::read_to_string(data_file)?;
-        let data: Vec<i32> = data_string
+        let data: Vec<i64> = data_string
             .split(",")
-            .map(|x| x.parse::<i32>().unwrap())
+            .map(|x| x.parse::<i64>().unwrap())
             .collect();
         return Ok(data);
     }
@@ -50,26 +50,26 @@ impl IntCodeCPU {
         Ok(())
     }
 
-    pub fn set_data(&mut self, data: Vec<i32>) {
+    pub fn set_data(&mut self, data: Vec<i64>) {
         self.data = data;
         let len = self.data.len();
         self.data_end = len - 1;
-        let mut zero_buffer: Vec<i32> = vec![0, ZERO_BUFFER_MULTIPLE * len as i32];
+        let mut zero_buffer: Vec<i64> = vec![0, ZERO_BUFFER_MULTIPLE * len as i64];
         self.data.append(&mut zero_buffer);
     }
 
-    pub fn get_data_at(&mut self, index: usize) -> i32 {
+    pub fn get_data_at(&mut self, index: usize) -> i64 {
         return self.data[index];
     }
 
-    pub fn set_data_at(&mut self, index: usize, value: i32) {
+    pub fn set_data_at(&mut self, index: usize, value: i64) {
         self.data[index] = value;
         if index > self.data_end {
             self.data_end = index;
         }
     }
 
-    pub fn enqueue_input(&mut self, input: i32) {
+    pub fn enqueue_input(&mut self, input: i64) {
         self.input.push_back(input);
     }
 
@@ -77,7 +77,7 @@ impl IntCodeCPU {
         return self.input.len() > 0;
     }
 
-    pub fn reset(&mut self, data: Vec<i32>) {
+    pub fn reset(&mut self, data: Vec<i64>) {
         self.set_data(data);
         self.instr_ptr = 0;
         self.relative_base = 0;
@@ -86,7 +86,7 @@ impl IntCodeCPU {
         self.state = CPUState::Ready;
     }
 
-    fn dequeue_input(&mut self) -> i32 {
+    fn dequeue_input(&mut self) -> i64 {
         return self.input.pop_front().unwrap();
     }
 
@@ -111,12 +111,12 @@ impl IntCodeCPU {
         match opcode {
             1 => {
                 // Add
-                self.two_param_op_assign(|a: &i32, b: &i32| -> i32 { *a + *b });
+                self.two_param_op_assign(|a: &i64, b: &i64| -> i64 { *a + *b });
                 false
             }
             2 => {
                 // Mult
-                self.two_param_op_assign(|a: &i32, b: &i32| -> i32 { *a * *b });
+                self.two_param_op_assign(|a: &i64, b: &i64| -> i64 { *a * *b });
                 false
             }
             3 => {
@@ -164,14 +164,14 @@ impl IntCodeCPU {
             }
             7 => {
                 // Less than
-                self.two_param_op_assign(|a: &i32, b: &i32| -> i32 {
+                self.two_param_op_assign(|a: &i64, b: &i64| -> i64 {
                     return if a < b { 1 } else { 0 };
                 });
                 false
             }
             8 => {
                 // Equals
-                self.two_param_op_assign(|a: &i32, b: &i32| -> i32 {
+                self.two_param_op_assign(|a: &i64, b: &i64| -> i64 {
                     return if a == b { 1 } else { 0 };
                 });
                 false
@@ -182,7 +182,10 @@ impl IntCodeCPU {
                 let param0 = self.read_param(mode0, 0);
                 let new_relative_base = self.relative_base + param0 as usize;
                 if self.debug_log {
-                    println!("(9) Adjusting relative base, old: {}, new: {}", self.relative_base, new_relative_base);
+                    println!(
+                        "(9) Adjusting relative base, old: {}, new: {}",
+                        self.relative_base, new_relative_base
+                    );
                 }
                 self.relative_base = new_relative_base;
                 self.instr_ptr += 2;
@@ -200,7 +203,7 @@ impl IntCodeCPU {
         }
     }
 
-    fn read_two_params(&mut self) -> (i32, i32) {
+    fn read_two_params(&mut self) -> (i64, i64) {
         let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], &0);
         let mode1 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], &1);
         let param0 = self.read_param(mode0, 0);
@@ -208,13 +211,13 @@ impl IntCodeCPU {
         return (param0, param1);
     }
 
-    fn read_two_params_with_assign(&mut self) -> (i32, i32, usize) {
+    fn read_two_params_with_assign(&mut self) -> (i64, i64, usize) {
         let (p0, p1) = self.read_two_params();
         let assign_index = self.data[self.instr_ptr + 3] as usize;
         return (p0, p1, assign_index);
     }
 
-    fn two_param_op_assign(&mut self, op: impl Fn(&i32, &i32) -> i32) {
+    fn two_param_op_assign(&mut self, op: impl Fn(&i64, &i64) -> i64) {
         let (param0, param1, assign_index) = self.read_two_params_with_assign();
         self.set_data_at(assign_index, op(&param0, &param1));
         self.instr_ptr += 4;
@@ -238,33 +241,27 @@ impl IntCodeCPU {
         }
     }
 
-    fn read_opcode(val: &i32) -> i32 {
+    fn read_opcode(val: &i64) -> i64 {
         return val
-            - IntCodeCPU::dig(val, &2) * 10i32.pow(2)
-            - IntCodeCPU::dig(val, &3) * 10i32.pow(3)
-            - IntCodeCPU::dig(val, &4) * 10i32.pow(4);
+            - IntCodeCPU::dig(val, &2) * 10i64.pow(2)
+            - IntCodeCPU::dig(val, &3) * 10i64.pow(3)
+            - IntCodeCPU::dig(val, &4) * 10i64.pow(4);
     }
 
-    fn read_mode(val: &i32, param: &i32) -> i32 {
+    fn read_mode(val: &i64, param: &i32) -> i64 {
         return IntCodeCPU::dig(val, &(*param + 2));
     }
 
-    fn read_param(&mut self, mode: i32, pos: usize) -> i32 {
+    fn read_param(&mut self, mode: i64, pos: usize) -> i64 {
         match mode {
-            0 => {
-                self.data[self.data[self.instr_ptr + pos + 1] as usize]
-            }
-            1 => {
-                self.data[self.instr_ptr + pos + 1]
-            }
-            2 => {
-                self.data[self.relative_base + self.data[self.instr_ptr + pos + 1] as usize]
-            }
-            _ => { panic!("Illegal mode") }
+            0 => self.data[self.data[self.instr_ptr + pos + 1] as usize],
+            1 => self.data[self.instr_ptr + pos + 1],
+            2 => self.data[self.relative_base + self.data[self.instr_ptr + pos + 1] as usize],
+            _ => panic!("Illegal mode"),
         }
     }
 
-    pub fn dig(val: &i32, pwr: &i32) -> i32 {
-        return val / 10i32.pow(*pwr as u32) % 10;
+    pub fn dig(val: &i64, pwr: &i32) -> i64 {
+        return val / 10i64.pow(*pwr as u32) % 10;
     }
 }

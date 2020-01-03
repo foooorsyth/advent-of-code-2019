@@ -1,6 +1,6 @@
 use crate::intcode::IntCodeCPU;
 
-pub fn part1() -> std::io::Result<i32> {
+pub fn part1() -> std::io::Result<i64> {
     let mut cpu = IntCodeCPU::new();
     cpu.read_data_file("input/d5.txt")?;
     cpu.enqueue_input(1);
@@ -8,7 +8,7 @@ pub fn part1() -> std::io::Result<i32> {
     return Ok(cpu.last_output.unwrap());
 }
 
-pub fn part2() -> std::io::Result<i32> {
+pub fn part2() -> std::io::Result<i64> {
     let mut cpu = IntCodeCPU::new();
     cpu.read_data_file("input/d5.txt")?;
     cpu.enqueue_input(5);
