@@ -19,9 +19,20 @@ pub fn part1() -> std::io::Result<i32> {
 
 pub fn part2() -> std::io::Result<()> {
     let image_data = read_data("input/d8.txt")?;
-    let constructed_image = construct_image(&image_data, WIDTH, HEIGHT);
-    print_image(&constructed_image, WIDTH, HEIGHT);
+    let visual_image = visual_image(&construct_image(&image_data, WIDTH, HEIGHT));
+    print_image(&visual_image, WIDTH, HEIGHT);
     return Ok(());
+}
+
+fn visual_image(constructed_image: &Vec<u32>) -> Vec<char> {
+    return constructed_image
+        .iter()
+        .map(|x| match x {
+            0 => ' ',
+            1 => '#',
+            _ => ' ',
+        })
+        .collect();
 }
 
 fn construct_image(image_data: &Vec<u32>, w: usize, h: usize) -> Vec<u32> {
@@ -42,7 +53,10 @@ fn construct_image(image_data: &Vec<u32>, w: usize, h: usize) -> Vec<u32> {
     return res;
 }
 
-fn print_image(image_data: &Vec<u32>, w: usize, h: usize) {
+fn print_image<T>(image_data: &Vec<T>, w: usize, h: usize)
+where
+    T: std::fmt::Debug,
+{
     for y in 0..h {
         let row_start = w * y;
         let row_end = row_start + w;
