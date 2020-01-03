@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 use std::fs;
 
+#[derive(PartialEq)]
 pub enum CPUState {
     Ready,
     Running,
@@ -61,6 +62,10 @@ impl IntCodeCPU {
 
     pub fn has_input(&mut self) -> bool {
         return self.input.len() > 0;
+    }
+
+    pub fn set_instr_ptr(&mut self, position: usize) {
+        self.instr_ptr = position;
     }
 
     fn dequeue_input(&mut self) -> i32 {

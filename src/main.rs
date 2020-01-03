@@ -81,6 +81,11 @@ mod tests {
     fn test_d7_p1() {
         assert_eq!(d7::part1().unwrap(), 262086);
     }
+
+    #[test]
+    fn test_d7_p2() {
+        assert_eq!(d7::part2().unwrap(), 5371621);
+    }
 }
 
 fn main() {
@@ -90,8 +95,8 @@ fn main() {
     let res_d1_p2 = d1::part2().unwrap();
     println!("d1_p2: {}", res_d1_p2);
 
-    let res_d2_p1 = d2::part1();
-    println!("d2_p1: {}", res_d2_p1.unwrap());
+    let res_d2_p1 = d2::part1().unwrap();
+    println!("d2_p1: {}", res_d2_p1);
 
     let res_d2_p2 = d2::part2().unwrap();
     println!("d2_p2: {}", res_d2_p2);
@@ -122,4 +127,7 @@ fn main() {
 
     let res_d7_p1 = d7::part1().unwrap();
     println!("d7_p1: {}", res_d7_p1);
+
+    let res_d7_p2 = d7::part2().unwrap();
+    println!("d7_p2: {}", res_d7_p2);
 }
