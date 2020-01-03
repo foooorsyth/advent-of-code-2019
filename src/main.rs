@@ -140,4 +140,7 @@ fn main() {
 
     let res_d8_p1 = d8::part1().unwrap();
     println!("d8_p1: {}", res_d8_p1);
+
+    println!("d8_p2:");
+    d8::part2().unwrap();
 }
