@@ -62,8 +62,7 @@ fn phase_permutations_aux(
             'feedback: loop {
                 for i in 0..cpu_count {
                     if pass == 0 {
-                        cpus[i].set_data(data.clone());
-                        cpus[i].set_instr_ptr(0);
+                        cpus[i].reset(data.clone());
                         // Provide phase as input on first pass only
                         cpus[i].enqueue_input(phases[i]);
                     }
