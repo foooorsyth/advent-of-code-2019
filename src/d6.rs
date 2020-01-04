@@ -1,3 +1,4 @@
+use crate::ds::UTreeNode;
 use std::collections::{BinaryHeap, HashMap};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -19,25 +20,6 @@ pub fn part2() -> std::io::Result<i32> {
         san_node.parent.clone(),
     );
     return Ok(sp.unwrap() as i32);
-}
-
-#[allow(dead_code)]
-struct UTreeNode {
-    parent: String,
-    children: Vec<String>,
-    value: String,
-    visited: bool,
-}
-
-impl UTreeNode {
-    pub fn new(parent: String, val: String) -> UTreeNode {
-        return UTreeNode {
-            parent: parent,
-            value: val,
-            children: Vec::new(),
-            visited: false,
-        };
-    }
 }
 
 fn shortest_path(

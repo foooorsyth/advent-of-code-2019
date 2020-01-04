@@ -7,6 +7,7 @@ mod d6;
 mod d7;
 mod d8;
 mod d9;
+mod ds;
 mod intcode;
 
 #[cfg(test)]

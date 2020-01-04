@@ -1,18 +1,7 @@
+use crate::ds::Point;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-
-#[derive(Copy, Clone)]
-struct Point {
-    x: i32,
-    y: i32,
-}
-
-impl Point {
-    pub const fn origin() -> Point {
-        return Point { x: 0, y: 0 };
-    }
-}
 
 pub fn part1() -> std::io::Result<i32> {
     return common(1);
