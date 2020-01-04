@@ -9,7 +9,7 @@ pub enum CPUState {
     Halted,
 }
 
-const ZERO_BUFFER_MULTIPLE: i64 = 1;
+const ZERO_BUFFER_MULTIPLE: usize = 10;
 
 pub struct IntCodeCPU {
     data: Vec<i64>,
@@ -17,6 +17,7 @@ pub struct IntCodeCPU {
     instr_ptr: usize,
     relative_base: usize,
     input: VecDeque<i64>,
+    pub output: Vec<i64>,
     pub last_output: Option<i64>,
     pub state: CPUState,
     debug_log: bool,
@@ -30,6 +31,7 @@ impl IntCodeCPU {
             instr_ptr: 0,
             relative_base: 0,
             input: VecDeque::new(),
+            output: Vec::new(),
             last_output: None,
             state: CPUState::Ready,
             debug_log: false,
@@ -54,7 +56,7 @@ impl IntCodeCPU {
         self.data = data;
         let len = self.data.len();
         self.data_end = len - 1;
-        let mut zero_buffer: Vec<i64> = vec![0, ZERO_BUFFER_MULTIPLE * len as i64];
+        let mut zero_buffer: Vec<i64> = vec![0; ZERO_BUFFER_MULTIPLE * len];
         self.data.append(&mut zero_buffer);
     }
 
@@ -107,7 +109,11 @@ impl IntCodeCPU {
     }
 
     fn instruction(&mut self) -> bool {
-        let opcode = IntCodeCPU::read_opcode(&self.data[self.instr_ptr]);
+        let instr = self.data[self.instr_ptr];
+        if self.debug_log {
+            println!("instruction: {}", instr);
+        }
+        let opcode = IntCodeCPU::read_opcode(&instr);
         match opcode {
             1 => {
                 // Add
@@ -126,11 +132,15 @@ impl IntCodeCPU {
                 }
                 if self.has_input() {
                     let input_val = self.dequeue_input();
+                    let assign_mode = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 0);
+                    let assign_index = self.read_param(assign_mode, 0, true);
+                    self.set_data_at(assign_index as usize, input_val);
                     if self.debug_log {
-                        println!("(3) Using provided input: {}", input_val);
+                        println!(
+                            "(3) Using provided input: {}, assigning to: {}",
+                            input_val, assign_index
+                        );
                     }
-                    let assign_index = self.data[self.instr_ptr + 1] as usize;
-                    self.set_data_at(assign_index, input_val);
                     self.instr_ptr += 2;
                     false
                 } else {
@@ -143,11 +153,12 @@ impl IntCodeCPU {
             }
             4 => {
                 // Output value at param position/immediate
-                let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], &0);
-                let param0 = self.read_param(mode0, 0);
+                let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 0);
+                let param0 = self.read_param(mode0, 0, false);
                 if self.debug_log {
                     println!("(4) Output opcode: {}", param0);
                 }
+                self.output.push(param0);
                 self.last_output = Some(param0);
                 self.instr_ptr += 2;
                 false
@@ -178,9 +189,9 @@ impl IntCodeCPU {
             }
             9 => {
                 // Adjust relative base
-                let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], &0);
-                let param0 = self.read_param(mode0, 0);
-                let new_relative_base = self.relative_base + param0 as usize;
+                let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 0);
+                let param0 = self.read_param(mode0, 0, false);
+                let new_relative_base = (self.relative_base as i64 + param0) as usize;
                 if self.debug_log {
                     println!(
                         "(9) Adjusting relative base, old: {}, new: {}",
@@ -204,17 +215,18 @@ impl IntCodeCPU {
     }
 
     fn read_two_params(&mut self) -> (i64, i64) {
-        let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], &0);
-        let mode1 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], &1);
-        let param0 = self.read_param(mode0, 0);
-        let param1 = self.read_param(mode1, 1);
+        let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 0);
+        let mode1 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 1);
+        let param0 = self.read_param(mode0, 0, false);
+        let param1 = self.read_param(mode1, 1, false);
         return (param0, param1);
     }
 
     fn read_two_params_with_assign(&mut self) -> (i64, i64, usize) {
         let (p0, p1) = self.read_two_params();
-        let assign_index = self.data[self.instr_ptr + 3] as usize;
-        return (p0, p1, assign_index);
+        let assign_mode = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 2);
+        let assign_index = self.read_param(assign_mode, 2, true);
+        return (p0, p1, assign_index as usize);
     }
 
     fn two_param_op_assign(&mut self, op: impl Fn(&i64, &i64) -> i64) {
@@ -248,17 +260,25 @@ impl IntCodeCPU {
             - IntCodeCPU::dig(val, &4) * 10i64.pow(4);
     }
 
-    fn read_mode(val: &i64, param: &i32) -> i64 {
-        return IntCodeCPU::dig(val, &(*param + 2));
+    fn read_mode(val: &i64, param: i32) -> i64 {
+        return IntCodeCPU::dig(val, &(param + 2));
     }
 
-    fn read_param(&mut self, mode: i64, pos: usize) -> i64 {
-        match mode {
-            0 => self.data[self.data[self.instr_ptr + pos + 1] as usize],
-            1 => self.data[self.instr_ptr + pos + 1],
-            2 => self.data[self.relative_base + self.data[self.instr_ptr + pos + 1] as usize],
-            _ => panic!("Illegal mode"),
+    fn read_param(&mut self, mode: i64, pos: usize, assign: bool) -> i64 {
+        let value_in_data = self.data[self.instr_ptr + pos + 1];
+        if mode == 1 {
+            return value_in_data;
         }
+        let interior = match mode {
+            0 => value_in_data,
+            2 => (self.relative_base as i64) + value_in_data,
+            _ => panic!("Illegal mode")
+        };
+
+        return match assign {
+            true => interior,
+            false => self.data[interior as usize]
+        };
     }
 
     pub fn dig(val: &i64, pwr: &i32) -> i64 {

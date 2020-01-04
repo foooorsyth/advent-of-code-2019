@@ -12,7 +12,7 @@ Day | Part 1 | Part 2 | Comments
 6 | :heavy_check_mark: | :heavy_check_mark: | I fought the Borrow Checker, and the Borrow Checker (almost) won
 7 | :heavy_check_mark: | :heavy_check_mark: | 
 8 | :heavy_check_mark: | :heavy_check_mark: | Was expecting "Be sure to drink your Ovaltine"
-9 | | | 
+9 | :heavy_check_mark: | :heavy_check_mark: | 
 10 | | | 
 11 | | | 
 12 | | | 
