@@ -1,6 +1,8 @@
 # Advent of Code 2019 in Rust
 ## https://adventofcode.com/2019
-![Advent of Code](https://i.imgur.com/a1VttYC.jpg)
+![Advent of Code](https://i.imgur.com/gRDcR6a.jpg)
+
+![](https://github.com/aimkey/advent-of-code-2019/workflows/Build%20and%20Test/badge.svg)
 
 Day | Part 1 | Part 2 | Comments
 --- | ------- | ------- | --- 

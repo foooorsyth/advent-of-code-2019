@@ -1,4 +1,4 @@
-name: Rust
+name: Build and Test
 
 on: [push]
 
@@ -13,5 +13,5 @@ jobs:
       run: cargo fmt -- --check
     - name: Build
       run: cargo build --verbose
-    - name: Run tests
+    - name: Test
       run: cargo test --verbose
