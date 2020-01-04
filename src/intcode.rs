@@ -272,12 +272,12 @@ impl IntCodeCPU {
         let interior = match mode {
             0 => value_in_data,
             2 => (self.relative_base as i64) + value_in_data,
-            _ => panic!("Illegal mode")
+            _ => panic!("Illegal mode"),
         };
 
         return match assign {
             true => interior,
-            false => self.data[interior as usize]
+            false => self.data[interior as usize],
         };
     }
 
