@@ -1,4 +1,4 @@
-use crate::ds::Point;
+use crate::ds::{manhattan_distance, Point};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -24,10 +24,6 @@ fn common(part: i32) -> std::io::Result<i32> {
         }
     }
     panic!("wtf")
-}
-
-fn point_to_string(point: &Point) -> String {
-    return format!("{}{}{}", point.x.to_string(), ",", point.y.to_string());
 }
 
 fn walk(
@@ -65,9 +61,9 @@ fn walk(
             };
             step_count += 1;
             if *pass == 0 {
-                cache.insert(point_to_string(&last.clone()), step_count);
+                cache.insert(last.to_string(), step_count);
             } else {
-                match cache.get(&point_to_string(&last.clone())) {
+                match cache.get(&last.to_string()) {
                     Some(cached_step_count) => {
                         if part == 1 {
                             let dist = manhattan_distance(&Point::origin(), &last);
@@ -87,8 +83,4 @@ fn walk(
         }
     }
     return minimum;
-}
-
-fn manhattan_distance(a: &Point, b: &Point) -> i32 {
-    return (a.x - b.x).abs() + (a.y - b.y).abs();
 }

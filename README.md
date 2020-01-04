@@ -10,6 +10,10 @@ https://adventofcode.com/2019
 
 ```cargo build && cargo run && cargo test```
 
+**Debugging in VS Code:**
+
+Press F5 :)
+
 Day | Part 1 | Part 2 | Comments
 --- | ------- | ------- | --- 
 1 | :heavy_check_mark: | :heavy_check_mark: | 
