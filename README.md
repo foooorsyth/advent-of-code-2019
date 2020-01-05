@@ -3,7 +3,7 @@ https://adventofcode.com/2019
 
 ![Advent of Code](https://i.imgur.com/gRDcR6a.jpg)
 
-![](https://github.com/aimkey/advent-of-code-2019/workflows/Build%20and%20Test/badge.svg)
+![](https://github.com/aimkey/advent-of-code-2019/workflows/FmtBuildTest/badge.svg)
 ![](https://gitlab.com/aimkey/advent-of-code-2019/badges/master/pipeline.svg)
 
 **Building, running, and testing:**
