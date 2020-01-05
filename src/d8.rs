@@ -55,12 +55,15 @@ fn construct_image(image_data: &Vec<u32>, w: usize, h: usize) -> Vec<u32> {
 
 fn print_image<T>(image_data: &Vec<T>, w: usize, h: usize)
 where
-    T: std::fmt::Debug,
+    T: std::fmt::Display,
 {
     for y in 0..h {
         let row_start = w * y;
         let row_end = row_start + w;
-        println!("{:?}", &image_data[row_start..row_end])
+        for x in row_start..row_end {
+            print!("{}", &image_data[x]);
+        }
+        print!("\n")
     }
 }
 

@@ -1,5 +1,6 @@
 mod d1;
 mod d10;
+mod d11;
 mod d2;
 mod d3;
 mod d4;
@@ -15,6 +16,7 @@ mod shared;
 mod tests {
     use crate::d1;
     use crate::d10;
+    use crate::d11;
     use crate::d2;
     use crate::d3;
     use crate::d4;
@@ -118,6 +120,11 @@ mod tests {
     fn test_d10_p2() {
         assert_eq!(d10::part2().unwrap(), 612);
     }
+
+    #[test]
+    fn test_d11_p1() {
+        assert_eq!(d11::part1().unwrap(), 2021);
+    }
 }
 
 fn main() {
@@ -180,4 +187,7 @@ fn main() {
 
     let res_d10_p2 = d10::part2().unwrap();
     println!("d10_p2: {}", res_d10_p2);
+
+    let res_d11_p1 = d11::part1().unwrap();
+    println!("d11_p1: {}", res_d11_p1);
 }
