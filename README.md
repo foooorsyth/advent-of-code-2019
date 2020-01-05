@@ -27,7 +27,7 @@ Day | Part 1 | Part 2 | Comments
 9 | :heavy_check_mark: | :heavy_check_mark: | 
 10 | :heavy_check_mark: | :heavy_check_mark: | 
 11 | :heavy_check_mark: | :heavy_check_mark: | 
-12 | | | 
+12 | :heavy_check_mark: | | 
 13 | | | 
 14 | | | 
 15 | | | 
