@@ -105,3 +105,36 @@ pub fn distance(a: &Point, b: &Point) -> f32 {
 pub fn distance_i32(a: &Point, b: &Point) -> i32 {
     return (distance(a, b) * 1000000f32).floor() as i32;
 }
+
+pub fn print_image<T>(image_data: &Vec<T>, w: usize, h: usize)
+where
+    T: std::fmt::Display,
+{
+    for y in 0..h {
+        let row_start = w * y;
+        let row_end = row_start + w;
+        for x in row_start..row_end {
+            print!("{}", &image_data[x]);
+        }
+        print!("\n")
+    }
+}
+
+pub fn visual_image(constructed_image: &Vec<u8>) -> Vec<char> {
+    return constructed_image
+        .iter()
+        .map(|x| match x {
+            0 => ' ',
+            1 => '#',
+            _ => ' ',
+        })
+        .collect();
+}
+
+pub fn get_pixel_at(img: &Vec<u8>, w: i32, p: &Point) -> u8 {
+    return img[(w * p.y + p.x) as usize];
+}
+
+pub fn set_pixel_at(img: &mut Vec<u8>, w: i32, p: &Point, val: u8) {
+    img[(w * p.y + p.x) as usize] = val;
+}

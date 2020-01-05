@@ -190,4 +190,7 @@ fn main() {
 
     let res_d11_p1 = d11::part1().unwrap();
     println!("d11_p1: {}", res_d11_p1);
+
+    println!("d11_p2:");
+    d11::part2().unwrap();
 }

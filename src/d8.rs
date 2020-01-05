@@ -1,3 +1,5 @@
+use crate::shared::print_image;
+use crate::shared::visual_image;
 use std::fs::File;
 use std::io::prelude::*;
 
@@ -24,19 +26,8 @@ pub fn part2() -> std::io::Result<()> {
     return Ok(());
 }
 
-fn visual_image(constructed_image: &Vec<u32>) -> Vec<char> {
-    return constructed_image
-        .iter()
-        .map(|x| match x {
-            0 => ' ',
-            1 => '#',
-            _ => ' ',
-        })
-        .collect();
-}
-
-fn construct_image(image_data: &Vec<u32>, w: usize, h: usize) -> Vec<u32> {
-    let mut res = Vec::<u32>::new();
+fn construct_image(image_data: &Vec<u8>, w: usize, h: usize) -> Vec<u8> {
+    let mut res = Vec::<u8>::new();
     let layer_count = image_data.len() / (WIDTH * HEIGHT);
     for y in 0..h {
         for x in 0..w {
@@ -53,21 +44,7 @@ fn construct_image(image_data: &Vec<u32>, w: usize, h: usize) -> Vec<u32> {
     return res;
 }
 
-fn print_image<T>(image_data: &Vec<T>, w: usize, h: usize)
-where
-    T: std::fmt::Display,
-{
-    for y in 0..h {
-        let row_start = w * y;
-        let row_end = row_start + w;
-        for x in row_start..row_end {
-            print!("{}", &image_data[x]);
-        }
-        print!("\n")
-    }
-}
-
-fn count_values(image_data: &Vec<u32>, layer: usize, w: usize, h: usize) -> (i32, i32, i32) {
+fn count_values(image_data: &Vec<u8>, layer: usize, w: usize, h: usize) -> (i32, i32, i32) {
     let mut zero_count = 0;
     let mut one_count = 0;
     let mut two_count = 0;
@@ -85,10 +62,13 @@ fn count_values(image_data: &Vec<u32>, layer: usize, w: usize, h: usize) -> (i32
     return (zero_count, one_count, two_count);
 }
 
-fn read_data(data_file: &'static str) -> std::io::Result<Vec<u32>> {
+fn read_data(data_file: &'static str) -> std::io::Result<Vec<u8>> {
     let mut f = File::open(data_file)?;
     let mut text = String::new();
     f.read_to_string(&mut text)?;
-    let int_vec: Vec<u32> = text.chars().map(|c| c.to_digit(10).unwrap()).collect();
+    let int_vec: Vec<u8> = text
+        .chars()
+        .map(|c| (c.to_digit(10).unwrap() as u8))
+        .collect();
     return Ok(int_vec);
 }

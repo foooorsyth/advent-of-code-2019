@@ -1,4 +1,4 @@
-use crate::shared::{distance_i32, Point, PointDist};
+use crate::shared::{distance_i32, get_pixel_at, set_pixel_at, Point, PointDist};
 use std::collections::{BinaryHeap, HashMap};
 use std::f32::consts::PI;
 use std::fs::File;
@@ -187,14 +187,6 @@ fn flood_fill(
         },
         asteroid_lut,
     );
-}
-
-fn get_pixel_at(img: &Vec<u8>, w: i32, p: &Point) -> u8 {
-    return img[(w * p.y + p.x) as usize];
-}
-
-fn set_pixel_at(img: &mut Vec<u8>, w: i32, p: &Point, val: u8) {
-    img[(w * p.y + p.x) as usize] = val;
 }
 
 pub fn construct_image(data_file: &'static str) -> std::io::Result<(Vec<u8>, i32, i32)> {

@@ -26,7 +26,7 @@ Day | Part 1 | Part 2 | Comments
 8 | :heavy_check_mark: | :heavy_check_mark: | Was expecting "Be sure to drink your Ovaltine"
 9 | :heavy_check_mark: | :heavy_check_mark: | 
 10 | :heavy_check_mark: | :heavy_check_mark: | 
-11 | | | 
+11 | :heavy_check_mark: | :heavy_check_mark: | 
 12 | | | 
 13 | | | 
 14 | | | 
