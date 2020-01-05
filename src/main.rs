@@ -8,8 +8,8 @@ mod d6;
 mod d7;
 mod d8;
 mod d9;
-mod ds;
 mod intcode;
+mod shared;
 
 #[cfg(test)]
 mod tests {
@@ -113,6 +113,11 @@ mod tests {
     fn test_d10_p1() {
         assert_eq!(d10::part1().unwrap(), 269);
     }
+
+    #[test]
+    fn test_d10_p2() {
+        assert_eq!(d10::part2().unwrap(), 612);
+    }
 }
 
 fn main() {
@@ -172,4 +177,7 @@ fn main() {
 
     let res_d10_p1 = d10::part1().unwrap();
     println!("d10_p1: {}", res_d10_p1);
+
+    let res_d10_p2 = d10::part2().unwrap();
+    println!("d10_p2: {}", res_d10_p2);
 }

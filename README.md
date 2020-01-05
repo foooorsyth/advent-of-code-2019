@@ -12,7 +12,7 @@ https://adventofcode.com/2019
 
 **Debugging in VS Code:**
 
-Press F5 :)
+Install C/C++, CodeLLDB, and Rust (rls) Extensions. Press F5 :)
 
 Day | Part 1 | Part 2 | Comments
 --- | ------- | ------- | --- 
@@ -25,7 +25,7 @@ Day | Part 1 | Part 2 | Comments
 7 | :heavy_check_mark: | :heavy_check_mark: | 
 8 | :heavy_check_mark: | :heavy_check_mark: | Was expecting "Be sure to drink your Ovaltine"
 9 | :heavy_check_mark: | :heavy_check_mark: | 
-10 | | | 
+10 | :heavy_check_mark: | :heavy_check_mark: | 
 11 | | | 
 12 | | | 
 13 | | | 

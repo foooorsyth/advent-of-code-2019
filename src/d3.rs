@@ -1,4 +1,4 @@
-use crate::ds::{manhattan_distance, Point};
+use crate::shared::{manhattan_distance, Point};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
