@@ -8,6 +8,10 @@ pub struct Point {
 }
 
 impl Point {
+    pub fn new(x: i32, y: i32) -> Point {
+        return Point { x: x, y: y };
+    }
+
     pub const fn origin() -> Point {
         return Point { x: 0, y: 0 };
     }

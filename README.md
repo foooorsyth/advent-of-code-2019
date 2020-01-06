@@ -32,7 +32,7 @@ Day | Part 1 | Part 2 | Comments
 10 | :heavy_check_mark: | :heavy_check_mark: | 
 11 | :heavy_check_mark: | :heavy_check_mark: | 
 12 | :heavy_check_mark: | :heavy_check_mark: | Thanks, Euclid
-13 | | | 
+13 | :heavy_check_mark: | | 
 14 | | | 
 15 | | | 
 16 | | | 
