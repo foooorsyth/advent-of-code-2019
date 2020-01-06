@@ -130,6 +130,9 @@ pub fn visual_image(constructed_image: &Vec<u8>) -> Vec<char> {
         .map(|x| match x {
             0 => ' ',
             1 => '#',
+            2 => '=',
+            3 => '-',
+            4 => 'o',
             _ => ' ',
         })
         .collect();

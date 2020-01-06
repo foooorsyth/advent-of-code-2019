@@ -14,6 +14,8 @@ mod d9;
 mod intcode;
 mod shared;
 
+use std::env;
+
 #[cfg(test)]
 mod tests {
     use crate::d1;
@@ -147,78 +149,90 @@ mod tests {
 }
 
 fn main() {
-    let res_d1_p1 = d1::part1().unwrap();
-    println!("d1_p1: {}", res_d1_p1);
-
-    let res_d1_p2 = d1::part2().unwrap();
-    println!("d1_p2: {}", res_d1_p2);
-
-    let res_d2_p1 = d2::part1().unwrap();
-    println!("d2_p1: {}", res_d2_p1);
-
-    let res_d2_p2 = d2::part2().unwrap();
-    println!("d2_p2: {}", res_d2_p2);
-
-    let res_d3_p1 = d3::part1().unwrap();
-    println!("d3_p1: {}", res_d3_p1);
-
-    let res_d3_p2 = d3::part2().unwrap();
-    println!("d3_p1: {}", res_d3_p2);
-
-    let res_d4_p1 = d4::part1();
-    println!("d4_p1: {}", res_d4_p1);
-
-    let res_d4_p2 = d4::part2();
-    println!("d4_p2: {}", res_d4_p2);
-
-    let res_d5_p1 = d5::part1().unwrap();
-    println!("d5_p1: {}", res_d5_p1);
-
-    let res_d5_p2 = d5::part2().unwrap();
-    println!("d5_p2: {}", res_d5_p2);
-
-    let res_d6_p1 = d6::part1().unwrap();
-    println!("d6_p1: {}", res_d6_p1);
-
-    let res_d6_p2 = d6::part2().unwrap();
-    println!("d6_p2: {}", res_d6_p2);
-
-    let res_d7_p1 = d7::part1().unwrap();
-    println!("d7_p1: {}", res_d7_p1);
-
-    let res_d7_p2 = d7::part2().unwrap();
-    println!("d7_p2: {}", res_d7_p2);
-
-    let res_d8_p1 = d8::part1().unwrap();
-    println!("d8_p1: {}", res_d8_p1);
-
-    println!("d8_p2:");
-    d8::part2().unwrap();
-
-    let res_d9_p1 = d9::part1().unwrap();
-    println!("d9_p1: {}", res_d9_p1);
-
-    let res_d9_p2 = d9::part2().unwrap();
-    println!("d9_p2: {}", res_d9_p2);
-
-    let res_d10_p1 = d10::part1().unwrap();
-    println!("d10_p1: {}", res_d10_p1);
-
-    let res_d10_p2 = d10::part2().unwrap();
-    println!("d10_p2: {}", res_d10_p2);
-
-    let res_d11_p1 = d11::part1().unwrap();
-    println!("d11_p1: {}", res_d11_p1);
-
-    println!("d11_p2:");
-    d11::part2().unwrap();
-
-    let res_d12_p1 = d12::part1().unwrap();
-    println!("d12_p1: {}", res_d12_p1);
-
-    let res_d12_p2 = d12::part2().unwrap();
-    println!("d12_p2: {}", res_d12_p2);
-
-    let res_d13_p1 = d13::part1().unwrap();
-    println!("d13_p1: {}", res_d13_p1);
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        println!("Provide day. eg. cargo run -- 12");
+        return;
+    }
+    match args[1].parse::<i32>().unwrap() {
+        1 => {
+            let res_d1_p1 = d1::part1().unwrap();
+            println!("d1_p1: {}", res_d1_p1);
+            let res_d1_p2 = d1::part2().unwrap();
+            println!("d1_p2: {}", res_d1_p2);
+        }
+        2 => {
+            let res_d2_p1 = d2::part1().unwrap();
+            println!("d2_p1: {}", res_d2_p1);
+            let res_d2_p2 = d2::part2().unwrap();
+            println!("d2_p2: {}", res_d2_p2);
+        }
+        3 => {
+            let res_d3_p1 = d3::part1().unwrap();
+            println!("d3_p1: {}", res_d3_p1);
+            let res_d3_p2 = d3::part2().unwrap();
+            println!("d3_p1: {}", res_d3_p2);
+        }
+        4 => {
+            let res_d4_p1 = d4::part1();
+            println!("d4_p1: {}", res_d4_p1);
+            let res_d4_p2 = d4::part2();
+            println!("d4_p2: {}", res_d4_p2);
+        }
+        5 => {
+            let res_d5_p1 = d5::part1().unwrap();
+            println!("d5_p1: {}", res_d5_p1);
+            let res_d5_p2 = d5::part2().unwrap();
+            println!("d5_p2: {}", res_d5_p2);
+        }
+        6 => {
+            let res_d6_p1 = d6::part1().unwrap();
+            println!("d6_p1: {}", res_d6_p1);
+            let res_d6_p2 = d6::part2().unwrap();
+            println!("d6_p2: {}", res_d6_p2);
+        }
+        7 => {
+            let res_d7_p1 = d7::part1().unwrap();
+            println!("d7_p1: {}", res_d7_p1);
+            let res_d7_p2 = d7::part2().unwrap();
+            println!("d7_p2: {}", res_d7_p2);
+        }
+        8 => {
+            let res_d8_p1 = d8::part1().unwrap();
+            println!("d8_p1: {}", res_d8_p1);
+            println!("d8_p2:");
+            d8::part2().unwrap();
+        }
+        9 => {
+            let res_d9_p1 = d9::part1().unwrap();
+            println!("d9_p1: {}", res_d9_p1);
+            let res_d9_p2 = d9::part2().unwrap();
+            println!("d9_p2: {}", res_d9_p2);
+        }
+        10 => {
+            let res_d10_p1 = d10::part1().unwrap();
+            println!("d10_p1: {}", res_d10_p1);
+            let res_d10_p2 = d10::part2().unwrap();
+            println!("d10_p2: {}", res_d10_p2);
+        }
+        11 => {
+            let res_d11_p1 = d11::part1().unwrap();
+            println!("d11_p1: {}", res_d11_p1);
+            println!("d11_p2:");
+            d11::part2().unwrap();
+        }
+        12 => {
+            let res_d12_p1 = d12::part1().unwrap();
+            println!("d12_p1: {}", res_d12_p1);
+            let res_d12_p2 = d12::part2().unwrap();
+            println!("d12_p2: {}", res_d12_p2);
+        }
+        13 => {
+            let res_d13_p1 = d13::part1().unwrap();
+            println!("d13_p1: {}", res_d13_p1);
+            let res_d13_p2 = d13::part2().unwrap();
+            println!("d13_p2: {}", res_d13_p2);
+        }
+        _ => println!("Invalid day"),
+    }
 }

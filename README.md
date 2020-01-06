@@ -6,9 +6,15 @@ https://adventofcode.com/2019
 ![](https://github.com/aimkey/advent-of-code-2019/workflows/FmtBuildTest/badge.svg)
 ![](https://gitlab.com/aimkey/advent-of-code-2019/badges/master/pipeline.svg)
 
-**Building, running, and testing:**
+**Running:**
 
-```cargo build && cargo run && cargo test```
+```cargo run -- <day>```
+
+So, ```cargo run -- 7``` will execute Parts 1 and 2 from Day 7
+
+**Testing:**
+
+```cargo test```
 
 **Debugging in VS Code:**
 
@@ -32,7 +38,7 @@ Day | Part 1 | Part 2 | Comments
 10 | :heavy_check_mark: | :heavy_check_mark: | 
 11 | :heavy_check_mark: | :heavy_check_mark: | 
 12 | :heavy_check_mark: | :heavy_check_mark: | Thanks, Euclid
-13 | :heavy_check_mark: | | 
+13 | :heavy_check_mark: | :heavy_check_mark: | Used an aimbot :)
 14 | | | 
 15 | | | 
 16 | | | 
