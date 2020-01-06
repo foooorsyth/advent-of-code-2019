@@ -14,6 +14,10 @@ https://adventofcode.com/2019
 
 Install C/C++, CodeLLDB, and Rust (rls) Extensions. Press F5 :)
 
+**Constraints:**
+
+Standard lib only. No external crates.
+
 Day | Part 1 | Part 2 | Comments
 --- | ------- | ------- | --- 
 1 | :heavy_check_mark: | :heavy_check_mark: | 
