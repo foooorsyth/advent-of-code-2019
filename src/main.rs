@@ -132,6 +132,11 @@ mod tests {
     fn test_d12_p1() {
         assert_eq!(d12::part1().unwrap(), 12644);
     }
+
+    #[test]
+    fn test_d12_p2() {
+        assert_eq!(d12::part2().unwrap(), 290314621566528);
+    }
 }
 
 fn main() {
@@ -203,4 +208,7 @@ fn main() {
 
     let res_d12_p1 = d12::part1().unwrap();
     println!("d12_p1: {}", res_d12_p1);
+
+    let res_d12_p2 = d12::part2().unwrap();
+    println!("d12_p2: {}", res_d12_p2);
 }

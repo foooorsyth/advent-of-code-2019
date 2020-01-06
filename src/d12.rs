@@ -19,7 +19,10 @@ impl Body {
 
 pub fn part1() -> Result<i32> {
     let mut bodies = read("input/d12.txt")?;
-    main_loop(&mut bodies, 1000);
+    for _ in 0..1000 {
+        apply_grav(&mut bodies);
+        apply_vel(&mut bodies);
+    }
     let mut energy_sum = 0;
     for body in bodies {
         let en = energy(&body);
@@ -28,11 +31,61 @@ pub fn part1() -> Result<i32> {
     return Ok(energy_sum);
 }
 
-fn main_loop(bodies: &mut Vec<Body>, iterations: usize) {
-    for _ in 0..iterations {
-        apply_grav(bodies);
-        apply_vel(bodies);
+pub fn part2() -> Result<i64> {
+    let mut bodies = read("input/d12.txt")?;
+    let mut iteration = 0;
+    let x_state_original = state(&mut bodies, 0);
+    let y_state_original = state(&mut bodies, 1);
+    let z_state_original = state(&mut bodies, 2);
+    let mut x_cycle_len = 0;
+    let mut y_cycle_len = 0;
+    let mut z_cycle_len = 0;
+    loop {
+        iteration += 1;
+        apply_grav(&mut bodies);
+        apply_vel(&mut bodies);
+        let x_state_rep = state(&bodies, 0);
+        let y_state_rep = state(&bodies, 1);
+        let z_state_rep = state(&bodies, 2);
+        if x_cycle_len == 0 && x_state_rep == x_state_original {
+            x_cycle_len = iteration;
+        }
+        if y_cycle_len == 0 && y_state_rep == y_state_original {
+            y_cycle_len = iteration;
+        }
+        if z_cycle_len == 0 && z_state_rep == z_state_original {
+            z_cycle_len = iteration;
+        }
+        if x_cycle_len > 0 && y_cycle_len > 0 && z_cycle_len > 0 {
+            return Ok(lcm(lcm(x_cycle_len, y_cycle_len), z_cycle_len));
+        }
     }
+}
+
+fn gcd(x: i64, y: i64) -> i64 {
+    let mut x = x;
+    let mut y = y;
+    while y != 0 {
+        let t = y;
+        y = x % y;
+        x = t;
+    }
+    x
+}
+
+fn lcm(x: i64, y: i64) -> i64 {
+    return (x * y).abs() / gcd(x, y);
+}
+
+fn state(bodies: &Vec<Body>, c: usize) -> String {
+    let mut res = "".to_owned();
+    for body in bodies {
+        res.push_str(&body.p[c].to_string());
+        res.push_str(&",");
+        res.push_str(&body.v[c].to_string());
+        res.push_str(&",");
+    }
+    return res;
 }
 
 fn apply_grav(bodies: &mut Vec<Body>) {
