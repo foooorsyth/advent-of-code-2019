@@ -18,7 +18,9 @@ So, ```cargo run -- 7``` will execute Parts 1 and 2 from Day 7
 
 **Debugging in VS Code:**
 
-Install C/C++, CodeLLDB, and Rust (rls) Extensions. Press F5 :)
+* Install C/C++, CodeLLDB, and Rust (rls) Extensions. 
+* Set ```// Day to debug``` arg in .vscode/launch.json
+* Press F5
 
 **Constraints:**
 
@@ -39,7 +41,7 @@ Day | Part 1 | Part 2 | Comments
 11 | :heavy_check_mark: | :heavy_check_mark: | 
 12 | :heavy_check_mark: | :heavy_check_mark: | Thanks, Euclid
 13 | :heavy_check_mark: | :heavy_check_mark: | Used an aimbot :)
-14 | | | 
+14 | :heavy_check_mark: | | 
 15 | | | 
 16 | | | 
 17 | | | 
