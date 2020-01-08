@@ -12,7 +12,7 @@ pub fn part1() -> std::io::Result<i32> {
 pub fn part2() -> std::io::Result<i64> {
     let mut cpu = IntCodeCPU::new();
     cpu.read_data_file("input/d13.txt")?;
-    cpu.set_data_at(0, 2);
+    cpu.set_mem_at(0, 2);
     let mut score: i64 = 0;
     loop {
         cpu.execute();

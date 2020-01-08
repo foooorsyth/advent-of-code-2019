@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::fs;
 
-#[derive(PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum CPUState {
     Ready,
     Running,
@@ -9,11 +9,11 @@ pub enum CPUState {
     Halted,
 }
 
-const ZERO_BUFFER_MULTIPLE: usize = 10;
+const ZERO_BUFFER_MULTIPLE: usize = 1;
 
 pub struct IntCodeCPU {
-    data: Vec<i64>,
-    data_end: usize,
+    mem: Vec<i64>,
+    mem_end: usize,
     instr_ptr: usize,
     relative_base: usize,
     input: VecDeque<i64>,
@@ -26,8 +26,8 @@ pub struct IntCodeCPU {
 impl IntCodeCPU {
     pub fn new() -> IntCodeCPU {
         return IntCodeCPU {
-            data: Vec::new(),
-            data_end: 0,
+            mem: Vec::new(),
+            mem_end: 0,
             instr_ptr: 0,
             relative_base: 0,
             input: VecDeque::new(),
@@ -36,6 +36,44 @@ impl IntCodeCPU {
             state: CPUState::Ready,
             debug_log: false,
         };
+    }
+
+    pub fn snapshot(&self) -> IntCodeCPU {
+        let lo: Option<i64>;
+        if self.last_output.is_some() {
+            lo = Some(self.last_output.unwrap());
+        } else {
+            lo = None;
+        }
+        return IntCodeCPU {
+            mem: self.mem.clone(),
+            mem_end: self.mem_end,
+            instr_ptr: self.instr_ptr,
+            relative_base: self.relative_base,
+            input: self.input.clone(),
+            output: self.output.clone(),
+            last_output: lo,
+            state: self.state,
+            debug_log: self.debug_log,
+        };
+    }
+
+    pub fn load_snapshot(&mut self, snap: IntCodeCPU) {
+        let lo: Option<i64>;
+        if snap.last_output.is_some() {
+            lo = Some(snap.last_output.unwrap());
+        } else {
+            lo = None;
+        }
+        self.mem = snap.mem.clone();
+        self.mem_end = snap.mem_end;
+        self.instr_ptr = snap.instr_ptr;
+        self.relative_base = snap.relative_base;
+        self.input = snap.input.clone();
+        self.output = snap.output.clone();
+        self.last_output = lo;
+        self.state = snap.state;
+        self.debug_log = snap.debug_log;
     }
 
     pub fn read_data_from_file(data_file: &'static str) -> std::io::Result<Vec<i64>> {
@@ -48,26 +86,26 @@ impl IntCodeCPU {
     }
 
     pub fn read_data_file(&mut self, data_file: &'static str) -> std::io::Result<()> {
-        self.set_data(IntCodeCPU::read_data_from_file(data_file)?);
+        self.set_mem(IntCodeCPU::read_data_from_file(data_file)?);
         Ok(())
     }
 
-    pub fn set_data(&mut self, data: Vec<i64>) {
-        self.data = data;
-        let len = self.data.len();
-        self.data_end = len - 1;
+    pub fn set_mem(&mut self, data: Vec<i64>) {
+        self.mem = data;
+        let len = self.mem.len();
+        self.mem_end = len - 1;
         let mut zero_buffer: Vec<i64> = vec![0; ZERO_BUFFER_MULTIPLE * len];
-        self.data.append(&mut zero_buffer);
+        self.mem.append(&mut zero_buffer);
     }
 
-    pub fn get_data_at(&mut self, index: usize) -> i64 {
-        return self.data[index];
+    pub fn get_mem_at(&mut self, index: usize) -> i64 {
+        return self.mem[index];
     }
 
-    pub fn set_data_at(&mut self, index: usize, value: i64) {
-        self.data[index] = value;
-        if index > self.data_end {
-            self.data_end = index;
+    pub fn set_mem_at(&mut self, index: usize, value: i64) {
+        self.mem[index] = value;
+        if index > self.mem_end {
+            self.mem_end = index;
         }
     }
 
@@ -80,7 +118,7 @@ impl IntCodeCPU {
     }
 
     pub fn reset(&mut self, data: Vec<i64>) {
-        self.set_data(data);
+        self.set_mem(data);
         self.instr_ptr = 0;
         self.relative_base = 0;
         self.input.clear();
@@ -99,7 +137,7 @@ impl IntCodeCPU {
 
     pub fn execute(&mut self) {
         self.state = CPUState::Running;
-        let input_len = self.data.len();
+        let input_len = self.mem.len();
         while self.instr_ptr < input_len {
             if self.instruction() {
                 return;
@@ -109,7 +147,7 @@ impl IntCodeCPU {
     }
 
     fn instruction(&mut self) -> bool {
-        let instr = self.data[self.instr_ptr];
+        let instr = self.mem[self.instr_ptr];
         if self.debug_log {
             println!("instruction: {}", instr);
         }
@@ -132,9 +170,9 @@ impl IntCodeCPU {
                 }
                 if self.has_input() {
                     let input_val = self.dequeue_input();
-                    let assign_mode = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 0);
+                    let assign_mode = IntCodeCPU::read_mode(&self.mem[self.instr_ptr], 0);
                     let assign_index = self.read_param(assign_mode, 0, true);
-                    self.set_data_at(assign_index as usize, input_val);
+                    self.set_mem_at(assign_index as usize, input_val);
                     if self.debug_log {
                         println!(
                             "(3) Using provided input: {}, assigning to: {}",
@@ -153,7 +191,7 @@ impl IntCodeCPU {
             }
             4 => {
                 // Output value at param position/immediate
-                let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 0);
+                let mode0 = IntCodeCPU::read_mode(&self.mem[self.instr_ptr], 0);
                 let param0 = self.read_param(mode0, 0, false);
                 if self.debug_log {
                     println!("(4) Output opcode: {}", param0);
@@ -189,7 +227,7 @@ impl IntCodeCPU {
             }
             9 => {
                 // Adjust relative base
-                let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 0);
+                let mode0 = IntCodeCPU::read_mode(&self.mem[self.instr_ptr], 0);
                 let param0 = self.read_param(mode0, 0, false);
                 let new_relative_base = (self.relative_base as i64 + param0) as usize;
                 if self.debug_log {
@@ -215,8 +253,8 @@ impl IntCodeCPU {
     }
 
     fn read_two_params(&mut self) -> (i64, i64) {
-        let mode0 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 0);
-        let mode1 = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 1);
+        let mode0 = IntCodeCPU::read_mode(&self.mem[self.instr_ptr], 0);
+        let mode1 = IntCodeCPU::read_mode(&self.mem[self.instr_ptr], 1);
         let param0 = self.read_param(mode0, 0, false);
         let param1 = self.read_param(mode1, 1, false);
         return (param0, param1);
@@ -224,14 +262,14 @@ impl IntCodeCPU {
 
     fn read_two_params_with_assign(&mut self) -> (i64, i64, usize) {
         let (p0, p1) = self.read_two_params();
-        let assign_mode = IntCodeCPU::read_mode(&self.data[self.instr_ptr], 2);
+        let assign_mode = IntCodeCPU::read_mode(&self.mem[self.instr_ptr], 2);
         let assign_index = self.read_param(assign_mode, 2, true);
         return (p0, p1, assign_index as usize);
     }
 
     fn two_param_op_assign(&mut self, op: impl Fn(&i64, &i64) -> i64) {
         let (param0, param1, assign_index) = self.read_two_params_with_assign();
-        self.set_data_at(assign_index, op(&param0, &param1));
+        self.set_mem_at(assign_index, op(&param0, &param1));
         self.instr_ptr += 4;
     }
 
@@ -265,7 +303,7 @@ impl IntCodeCPU {
     }
 
     fn read_param(&mut self, mode: i64, pos: usize, assign: bool) -> i64 {
-        let value_in_data = self.data[self.instr_ptr + pos + 1];
+        let value_in_data = self.mem[self.instr_ptr + pos + 1];
         if mode == 1 {
             return value_in_data;
         }
@@ -277,7 +315,7 @@ impl IntCodeCPU {
 
         return match assign {
             true => interior,
-            false => self.data[interior as usize],
+            false => self.mem[interior as usize],
         };
     }
 
