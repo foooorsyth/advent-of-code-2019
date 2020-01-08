@@ -165,6 +165,11 @@ mod tests {
     fn test_d15_p1() {
         assert_eq!(d15::part1().unwrap(), 330);
     }
+
+    #[test]
+    fn test_d15_p2() {
+        assert_eq!(d15::part2().unwrap(), 352);
+    }
 }
 
 fn main() {
@@ -261,6 +266,8 @@ fn main() {
         15 => {
             let res_d15_p1 = d15::part1().unwrap();
             println!("d15_p1: {}", res_d15_p1);
+            let res_d15_p2 = d15::part2().unwrap();
+            println!("d15_p2: {}", res_d15_p2);
         }
         _ => println!("Invalid day"),
     }
