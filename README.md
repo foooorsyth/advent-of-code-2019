@@ -43,7 +43,7 @@ Day | Part 1 | Part 2 | Comments
 13 | :heavy_check_mark: | :heavy_check_mark: | Used an aimbot :)
 14 | :heavy_check_mark: | :heavy_check_mark: | 
 15 | :heavy_check_mark: | :heavy_check_mark: | 
-16 | :heavy_check_mark: | | 
+16 | :heavy_check_mark: | :heavy_check_mark: | 
 17 | | | 
 18 | | | 
 19 | | | 

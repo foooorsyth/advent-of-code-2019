@@ -177,6 +177,11 @@ mod tests {
     fn test_d16_p1() {
         assert_eq!(d16::part1().unwrap().parse::<i32>().unwrap(), 42205986);
     }
+
+    #[test]
+    fn test_d16_p2() {
+        assert_eq!(d16::part2().unwrap().parse::<i32>().unwrap(), 13270205);
+    }
 }
 
 fn main() {
@@ -279,6 +284,8 @@ fn main() {
         16 => {
             let res_d16_p1 = d16::part1().unwrap();
             println!("d16_p1: {}", res_d16_p1);
+            let res_d16_p2 = d16::part2().unwrap();
+            println!("d16_p2: {}", res_d16_p2);
         }
         _ => println!("Invalid day"),
     }
