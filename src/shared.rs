@@ -110,7 +110,7 @@ pub fn distance_i32(a: &Point, b: &Point) -> i32 {
     return (distance(a, b) * 1000000f32).floor() as i32;
 }
 
-pub fn print_image<T>(image_data: &Vec<T>, w: usize, h: usize)
+pub fn print_image<T>(img: &Vec<T>, w: usize, h: usize)
 where
     T: std::fmt::Display,
 {
@@ -118,14 +118,14 @@ where
         let row_start = w * y;
         let row_end = row_start + w;
         for x in row_start..row_end {
-            print!("{}", &image_data[x]);
+            print!("{}", &img[x]);
         }
         print!("\n")
     }
 }
 
-pub fn visual_image(constructed_image: &Vec<u8>) -> Vec<char> {
-    return constructed_image
+pub fn visual_image(img: &Vec<u8>) -> Vec<char> {
+    return img
         .iter()
         .map(|x| match x {
             0 => ' ',
@@ -136,6 +136,19 @@ pub fn visual_image(constructed_image: &Vec<u8>) -> Vec<char> {
             _ => ' ',
         })
         .collect();
+}
+
+pub fn ascii_image(img: &Vec<i64>) -> String {
+    let chars: Vec<char> = img
+        .iter()
+        .map(|x| match x {
+            35 => '#',
+            46 => '.',
+            10 => '\n',
+            _ => ' ',
+        })
+        .collect();
+    return chars.into_iter().collect();
 }
 
 pub fn get_pixel_at(img: &Vec<u8>, w: i32, p: &Point) -> u8 {

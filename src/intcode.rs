@@ -9,7 +9,7 @@ pub enum CPUState {
     Halted,
 }
 
-const ZERO_BUFFER_MULTIPLE: usize = 1;
+const ZERO_BUFFER_MULTIPLE: usize = 2;
 
 pub struct IntCodeCPU {
     mem: Vec<i64>,
