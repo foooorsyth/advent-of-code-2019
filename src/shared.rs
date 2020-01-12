@@ -138,16 +138,57 @@ pub fn visual_image(img: &Vec<u8>) -> Vec<char> {
         .collect();
 }
 
+pub fn atoi(c: char) -> i64 {
+    match c {
+        '0' => 48,
+        '1' => 49,
+        '2' => 50,
+        '3' => 51,
+        '4' => 52,
+        '5' => 53,
+        '6' => 54,
+        '7' => 55,
+        '8' => 56,
+        '9' => 57,
+        ',' => 44,
+        'A' => 65,
+        'B' => 66,
+        'C' => 67,
+        'L' => 76,
+        'R' => 82,
+        _ => -1,
+    }
+}
+
+pub fn itoa(i: i64) -> char {
+    match i {
+        48 => '0',
+        49 => '1',
+        50 => '2',
+        51 => '3',
+        52 => '4',
+        53 => '5',
+        54 => '6',
+        55 => '7',
+        56 => '8',
+        57 => '9',
+        10 => '\n',
+        35 => '#',
+        46 => '.',
+        60 => '<',
+        62 => '>',
+        76 => 'L',
+        82 => 'R',
+        86 => 'V',
+        94 => '^',
+        118 => 'v',
+        _ => ' ',
+    }
+}
+
+#[allow(dead_code)]
 pub fn ascii_image(img: &Vec<i64>) -> String {
-    let chars: Vec<char> = img
-        .iter()
-        .map(|x| match x {
-            35 => '#',
-            46 => '.',
-            10 => '\n',
-            _ => ' ',
-        })
-        .collect();
+    let chars: Vec<char> = img.iter().map(|i| itoa(*i)).collect();
     return chars.into_iter().collect();
 }
 

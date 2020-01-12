@@ -189,6 +189,11 @@ mod tests {
     fn test_d17_p1() {
         assert_eq!(d17::part1().unwrap(), 6024);
     }
+
+    #[test]
+    fn test_d17_p2() {
+        assert_eq!(d17::part2().unwrap(), 897344);
+    }
 }
 
 fn main() {
@@ -297,6 +302,8 @@ fn main() {
         17 => {
             let res_d17_p1 = d17::part1().unwrap();
             println!("d17_p1: {}", res_d17_p1);
+            let res_d17_p2 = d17::part2().unwrap();
+            println!("d17_p2: {}", res_d17_p2);
         }
         _ => println!("Invalid day"),
     }

@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::fs;
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum CPUState {
     Ready,
     Running,
