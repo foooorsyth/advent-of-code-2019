@@ -24,7 +24,7 @@ pub fn part2() -> std::io::Result<i64> {
     cpu.output.clear();
     let full_sequence = walk(&img, w, h);
     let sorted_substrs = longest_repeated(&full_sequence, 3, 12);
-    let (parts, current_sequence) = hell(&full_sequence, &sorted_substrs, 0, 0, 0);
+    let (parts, current_sequence) = compress(&full_sequence, &sorted_substrs, 0, 0, 0);
     let condensed = condense(&current_sequence, &parts);
     let main_routine = asciify(&condensed);
     let a = asciify(&parts[0]);
@@ -52,6 +52,7 @@ pub fn part2() -> std::io::Result<i64> {
     Ok(cpu.last_output.unwrap())
 }
 
+// condenses AAABBBCCC to ABC, given lengths of A, B, and C
 fn condense(sequence: &String, parts: &Vec<String>) -> String {
     let mut res = "".to_owned();
     let seq_vec: Vec<char> = sequence.chars().collect();
@@ -66,7 +67,8 @@ fn condense(sequence: &String, parts: &Vec<String>) -> String {
     res
 }
 
-fn hell(
+//dynamic programming LZ-like compression
+fn compress(
     sequence: &String,
     sorted_substrs: &Vec<Substring>,
     a: usize,
@@ -141,11 +143,11 @@ fn hell(
     for ch in current_sequence.chars() {
         if !(ch == 'A' || ch == 'B' || ch == 'C') {
             if a < sorted_substrs.len() - 1 {
-                return hell(sequence, sorted_substrs, a + 1, b, c);
+                return compress(sequence, sorted_substrs, a + 1, b, c);
             } else if b < sorted_substrs.len() - 1 {
-                return hell(sequence, sorted_substrs, a, b + 1, c);
+                return compress(sequence, sorted_substrs, a, b + 1, c);
             } else if c < sorted_substrs.len() - 1 {
-                return hell(sequence, sorted_substrs, a, b, c + 1);
+                return compress(sequence, sorted_substrs, a, b, c + 1);
             } else {
                 panic!("couldn't do it");
             }

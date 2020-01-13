@@ -7,6 +7,7 @@ mod d14;
 mod d15;
 mod d16;
 mod d17;
+mod d18;
 mod d2;
 mod d3;
 mod d4;
@@ -31,6 +32,7 @@ mod tests {
     use crate::d15;
     use crate::d16;
     use crate::d17;
+    use crate::d18;
     use crate::d2;
     use crate::d3;
     use crate::d4;
@@ -194,6 +196,11 @@ mod tests {
     fn test_d17_p2() {
         assert_eq!(d17::part2().unwrap(), 897344);
     }
+
+    #[test]
+    fn test_d18_p1() {
+        d18::part1().unwrap();
+    }
 }
 
 fn main() {
@@ -304,6 +311,9 @@ fn main() {
             println!("d17_p1: {}", res_d17_p1);
             let res_d17_p2 = d17::part2().unwrap();
             println!("d17_p2: {}", res_d17_p2);
+        }
+        18 => {
+            d18::part1().unwrap();
         }
         _ => println!("Invalid day"),
     }
