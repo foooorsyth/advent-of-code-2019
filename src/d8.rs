@@ -19,11 +19,13 @@ pub fn part1() -> std::io::Result<i32> {
     return Ok(fewest_zeros.1 * fewest_zeros.2);
 }
 
-pub fn part2() -> std::io::Result<()> {
+pub fn part2(visualize: bool) -> std::io::Result<String> {
     let image_data = read_data("input/d8.txt")?;
     let visual_image = visual_image(&construct_image(&image_data, WIDTH, HEIGHT));
-    print_image(&visual_image, WIDTH, HEIGHT);
-    return Ok(());
+    if visualize {
+        print_image(&visual_image, WIDTH, HEIGHT);
+    }
+    return Ok(visual_image.iter().collect());
 }
 
 fn construct_image(image_data: &Vec<u8>, w: usize, h: usize) -> Vec<u8> {

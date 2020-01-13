@@ -118,6 +118,12 @@ mod tests {
     }
 
     #[test]
+    fn test_d8_p2() {
+        let jafra = "  ##  ##  #### ###   ##     # #  # #    #  # #  #    # #  # ###  #  # #  #    # #### #    ###  #### #  # #  # #    # #  #  #  ##  #  # #    #  # #  # ";
+        assert_eq!(d8::part2(false).unwrap(), jafra);
+    }
+
+    #[test]
     fn test_d9_p1() {
         assert_eq!(d9::part1().unwrap(), 4261108180);
     }
@@ -143,6 +149,12 @@ mod tests {
     }
 
     #[test]
+    fn test_d11_p2() {
+        let lbjheklh = " #    ###    ## #  # #### #  # #    #  #    #    #  #    # #  # #    # #  #    #  #    #    ###     # #### ###  ##   #    ####    #    #  #    # #  # #    # #  #    #  #    #    #  # #  # #  # #    # #  #    #  #    #### ###   ##  #  # #### #  # #### #  #   ";
+        assert_eq!(d11::part2(false).unwrap(), lbjheklh);
+    }
+
+    #[test]
     fn test_d12_p1() {
         assert_eq!(d12::part1().unwrap(), 12644);
     }
@@ -155,6 +167,11 @@ mod tests {
     #[test]
     fn test_d13_p1() {
         assert_eq!(d13::part1().unwrap(), 270);
+    }
+
+    #[test]
+    fn test_d13_p2() {
+        assert_eq!(d13::part2(false).unwrap(), 12535);
     }
 
     #[test]
@@ -256,7 +273,7 @@ fn main() {
             let res_d8_p1 = d8::part1().unwrap();
             println!("d8_p1: {}", res_d8_p1);
             println!("d8_p2:");
-            d8::part2().unwrap();
+            d8::part2(true).unwrap();
         }
         9 => {
             let res_d9_p1 = d9::part1().unwrap();
@@ -274,7 +291,7 @@ fn main() {
             let res_d11_p1 = d11::part1().unwrap();
             println!("d11_p1: {}", res_d11_p1);
             println!("d11_p2:");
-            d11::part2().unwrap();
+            d11::part2(true).unwrap();
         }
         12 => {
             let res_d12_p1 = d12::part1().unwrap();
@@ -285,7 +302,7 @@ fn main() {
         13 => {
             let res_d13_p1 = d13::part1().unwrap();
             println!("d13_p1: {}", res_d13_p1);
-            let res_d13_p2 = d13::part2().unwrap();
+            let res_d13_p2 = d13::part2(true).unwrap();
             println!("d13_p2: {}", res_d13_p2);
         }
         14 => {

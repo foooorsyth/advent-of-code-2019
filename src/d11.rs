@@ -7,7 +7,7 @@ pub fn part1() -> Result<i32> {
     return Ok(paint("input/d11.txt", 0).unwrap().keys().len() as i32);
 }
 
-pub fn part2() -> Result<()> {
+pub fn part2(visualize: bool) -> Result<String> {
     let pixels = paint("input/d11.txt", 1).unwrap();
     let mut x_min = i32::max_value();
     let mut x_max = i32::min_value();
@@ -38,8 +38,10 @@ pub fn part2() -> Result<()> {
         relative_pt.y = relative_pt.y + y_min.abs();
         set_pixel_at(&mut img, w, &relative_pt, pixels[pt_str]);
     }
-    print_image(&visual_image(&img), w as usize, h as usize);
-    return Ok(());
+    if visualize {
+        print_image(&visual_image(&img), w as usize, h as usize);
+    }
+    return Ok(visual_image(&img).iter().collect());
 }
 
 fn paint(input_file: &'static str, initial_val: u8) -> Result<HashMap<String, u8>> {

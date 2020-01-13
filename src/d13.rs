@@ -9,7 +9,7 @@ pub fn part1() -> std::io::Result<i32> {
     return Ok(img.iter().filter(|&v| *v == 2).count() as i32);
 }
 
-pub fn part2() -> std::io::Result<i64> {
+pub fn part2(visualize: bool) -> std::io::Result<i64> {
     let mut cpu = IntCodeCPU::new();
     cpu.read_data_file("input/d13.txt")?;
     cpu.set_mem_at(0, 2);
@@ -17,7 +17,9 @@ pub fn part2() -> std::io::Result<i64> {
     loop {
         cpu.execute();
         let (img, w, h, ball_x, paddle_x) = build_image(&cpu.output, &mut score);
-        println!("Score: {}", score);
+        if visualize {
+            println!("Score: {}", score);
+        }
         print_image(&visual_image(&img), w as usize, h as usize);
         match cpu.state {
             CPUState::WaitingForInput => {
