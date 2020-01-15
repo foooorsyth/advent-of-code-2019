@@ -41,6 +41,7 @@ mod tests {
     use crate::d7;
     use crate::d8;
     use crate::d9;
+    use crate::shared::atoi;
 
     #[test]
     fn test_d1_p1() {
@@ -215,8 +216,44 @@ mod tests {
     }
 
     #[test]
+    fn test_d18_p1_t1() {
+        let (img, w, h, lut) = d18::read("input/d18_p1_t1.txt").unwrap();
+        let cost_of_finding_keys = d18::find_keys(&img, w, h, &lut, atoi('a')..=atoi('b'));
+        assert_eq!(cost_of_finding_keys, 8);
+    }
+
+    #[test]
+    fn test_d18_p1_t2() {
+        let (img, w, h, lut) = d18::read("input/d18_p1_t2.txt").unwrap();
+        let cost_of_finding_keys = d18::find_keys(&img, w, h, &lut, atoi('a')..=atoi('f'));
+        assert_eq!(cost_of_finding_keys, 86);
+    }
+
+    #[test]
+    fn test_d18_p1_t3() {
+        let (img, w, h, lut) = d18::read("input/d18_p1_t3.txt").unwrap();
+        let cost_of_finding_keys = d18::find_keys(&img, w, h, &lut, atoi('a')..=atoi('g'));
+        assert_eq!(cost_of_finding_keys, 132);
+    }
+
+    #[test]
+    fn test_d18_p1_t4() {
+        let (img, w, h, lut) = d18::read("input/d18_p1_t4.txt").unwrap();
+        let cost_of_finding_keys = d18::find_keys(&img, w, h, &lut, atoi('a')..=atoi('p'));
+        assert_eq!(cost_of_finding_keys, 136);
+    }
+
+    #[test]
+    fn test_d18_p1_t5() {
+        let (img, w, h, lut) = d18::read("input/d18_p1_t5.txt").unwrap();
+        let cost_of_finding_keys = d18::find_keys(&img, w, h, &lut, atoi('a')..=atoi('i'));
+        assert_eq!(cost_of_finding_keys, 81);
+    }
+
+    #[test]
     fn test_d18_p1() {
-        d18::part1().unwrap();
+        let res_d18_p1 = d18::part1().unwrap();
+        assert_eq!(res_d18_p1, 4192);
     }
 }
 
@@ -330,7 +367,8 @@ fn main() {
             println!("d17_p2: {}", res_d17_p2);
         }
         18 => {
-            d18::part1().unwrap();
+            let res_d18_p1 = d18::part1().unwrap();
+            println!("d18_p1: {}", res_d18_p1);
         }
         _ => println!("Invalid day"),
     }

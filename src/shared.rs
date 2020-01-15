@@ -285,7 +285,28 @@ pub fn itoa(i: i64) -> char {
 
 pub fn is_alpha(c: char) -> bool {
     let c_int = atoi(c);
-    return (c_int >= 64 && c_int <= 90) || (c_int >= 97 && c_int <= 122);
+    return (c_int >= 65 && c_int <= 90) || (c_int >= 97 && c_int <= 122);
+}
+
+pub fn is_lower(c: char) -> bool {
+    let c_int = atoi(c);
+    return c_int >= 97 && c_int <= 122;
+}
+
+pub fn is_upper(c: char) -> bool {
+    let c_int = atoi(c);
+    return c_int >= 65 && c_int <= 90;
+}
+
+#[allow(dead_code)]
+pub fn to_upper(c: char) -> char {
+    let c_int = atoi(c);
+    return itoa(c_int - 32);
+}
+
+pub fn to_lower(c: char) -> char {
+    let c_int = atoi(c);
+    return itoa(c_int + 32);
 }
 
 #[allow(dead_code)]
@@ -300,4 +321,8 @@ pub fn get_pixel_at(img: &Vec<u8>, w: i32, p: &Point) -> u8 {
 
 pub fn set_pixel_at(img: &mut Vec<u8>, w: i32, p: &Point, val: u8) {
     img[(w * p.y + p.x) as usize] = val;
+}
+
+pub fn in_bounds(w: usize, h: usize, p: &Point) -> bool {
+    p.x >= 0 && p.x < (w as i32) && p.y >= 0 && p.y < (h as i32)
 }

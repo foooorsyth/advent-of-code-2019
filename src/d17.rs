@@ -1,5 +1,5 @@
 use crate::intcode::IntCodeCPU;
-use crate::shared::{atoi, itoa, Point};
+use crate::shared::{atoi, in_bounds, itoa, Point};
 use std::cmp::{min, Ordering};
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
@@ -425,10 +425,6 @@ fn step(img: &Vec<i64>, w: usize, h: usize, pos: &mut Point, dir: &mut i32) -> O
             _ => panic!("wtf"),
         }
     }
-}
-
-fn in_bounds(w: usize, h: usize, p: &Point) -> bool {
-    p.x >= 0 && p.x < (w as i32) && p.y >= 0 && p.y < (h as i32)
 }
 
 fn intersections(img: &Vec<i64>, w: usize, h: usize) -> Vec<Point> {
