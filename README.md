@@ -8,13 +8,13 @@ https://adventofcode.com/2019
 
 **Running:**
 
-```cargo run -- <day>```
+```cargo run --release -- <day>```
 
-So, ```cargo run -- 7``` will execute Parts 1 and 2 from Day 7
+So, ```cargo run --release -- 7``` will execute Parts 1 and 2 from Day 7
 
 **Testing:**
 
-```cargo test```
+```cargo test --release```
 
 **Debugging in VS Code:**
 
@@ -46,7 +46,7 @@ Day | Part 1 | Part 2 | Comments
 16 | :heavy_check_mark: | :heavy_check_mark: | 
 17 | :heavy_check_mark: | :heavy_check_mark: | Solve by hand: 2 minutes. Solve programmatically: 2 hours
 18 | :heavy_check_mark: | :heavy_check_mark: | My brain hurts
-19 | | | 
+19 | :heavy_check_mark: | :heavy_check_mark: | 
 20 | | | 
 21 | | | 
 22 | | | 
