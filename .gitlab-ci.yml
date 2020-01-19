@@ -20,4 +20,4 @@ build:
 test:
   stage: test
   script:
-    - cargo test --verbose
+    - cargo test --release --verbose

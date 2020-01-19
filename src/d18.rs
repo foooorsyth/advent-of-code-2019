@@ -5,12 +5,18 @@ use std::io::{BufRead, BufReader, Result};
 use std::ops::RangeInclusive;
 
 pub fn part1() -> Result<usize> {
-    let (img, w, h, lut) = read("input/d18.txt")?;
+    let (img, w, h, lut) = read("input/d18_p1.txt")?;
     let cost_of_finding_keys = find_keys(&img, w, h, &lut, atoi('a')..=atoi('z'));
     Ok(cost_of_finding_keys)
 }
 
-#[derive(Clone)]
+pub fn part2() -> Result<usize> {
+    let (imgs_luts, w, h) = read_quads("input/d18_p2.txt")?;
+    let cost_of_finding_keys = find_keys_quads(&imgs_luts, w, h);
+    Ok(cost_of_finding_keys)
+}
+
+#[derive(Debug, Clone)]
 pub struct MapSequence {
     cost: usize,
     keys: HashSet<char>,
@@ -27,6 +33,15 @@ impl MapSequence {
     fn has_all_keys(&self, key_range: RangeInclusive<i64>) -> bool {
         for k in key_range {
             if !self.keys.contains(&itoa(k)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    fn has_all_keys_from_set(&self, key_set: &HashSet<char>) -> bool {
+        for k in key_set {
+            if !self.keys.contains(&k) {
                 return false;
             }
         }
@@ -74,6 +89,164 @@ impl MapPath {
     }
 }
 
+pub fn find_keys_quads(
+    imgs_luts: &Vec<(Vec<char>, HashMap<char, Point>)>,
+    w: usize,
+    h: usize,
+) -> usize {
+    // memoization of all key to key paths
+    let mut path_memos = Vec::<HashMap<String, Vec<MapPath>>>::new();
+    let mut start_from_to_keys = Vec::<HashSet<String>>::new();
+    let mut base_key_sets = Vec::<HashSet<char>>::new();
+    let from = 64;
+    for quad in 0..4 {
+        base_key_sets.push(HashSet::new());
+        path_memos.push(HashMap::new());
+        start_from_to_keys.push(HashSet::new());
+        //println!("{:?}", imgs_luts[quad].1);
+        for to in imgs_luts[quad].1.keys() {
+            if is_lower(*to) {
+                base_key_sets[quad].insert(*to);
+                let start_from_to_key = from_to_key(from, atoi(*to));
+                start_from_to_keys[quad].insert(start_from_to_key.clone());
+                // @ to all keys
+                path_memos[quad].insert(
+                    start_from_to_key,
+                    calc_paths(
+                        &imgs_luts[quad].0,
+                        w,
+                        h,
+                        &imgs_luts[quad].1,
+                        from,
+                        atoi(*to),
+                    ),
+                );
+            }
+        }
+    }
+    for quad in 0..4 {
+        let mut indexable_keys: Vec<char> = imgs_luts[quad].1.keys().cloned().map(|x| x).collect();
+        indexable_keys.sort();
+        for from in 0..indexable_keys.len() {
+            if is_lower(indexable_keys[from]) {
+                // all keys to all other keys
+                for to in (from + 1)..indexable_keys.len() {
+                    if is_lower(indexable_keys[to]) {
+                        path_memos[quad].insert(
+                            from_to_key(atoi(indexable_keys[from]), atoi(indexable_keys[to])),
+                            calc_paths(
+                                &imgs_luts[quad].0,
+                                w,
+                                h,
+                                &imgs_luts[quad].1,
+                                atoi(indexable_keys[from]),
+                                atoi(indexable_keys[to]),
+                            ),
+                        );
+                    }
+                }
+            }
+        }
+    }
+    // another bfs across all paths until all keys are collected
+    let mut q = VecDeque::<(MapSequence, MapPath, bool, usize, Vec<char>)>::new();
+    let mut positions = Vec::<char>::new();
+    for _ in 0..4 {
+        positions.push('@');
+    }
+    // push all paths from start positions
+    for quad in 0..4 {
+        for start_from_to_key in &start_from_to_keys[quad] {
+            let paths = &path_memos[quad][start_from_to_key];
+            for path in paths {
+                q.push_back((
+                    MapSequence::new(),
+                    path.clone(),
+                    false,
+                    quad,
+                    positions.clone(),
+                ))
+            }
+        }
+    }
+    let mut min_sequence = MapSequence::new();
+    min_sequence.cost = usize::max_value();
+    let mut state_cache = HashMap::<String, usize>::new();
+    loop {
+        if q.len() == 0 {
+            return min_sequence.cost;
+        }
+        let current = q.pop_front().unwrap();
+        let mut current_seq = current.0;
+        let current_path = current.1;
+        let inverse = current.2;
+        let current_quad = current.3;
+        positions = current.4;
+        positions[current_quad] = if !inverse {
+            current_path.to
+        } else {
+            current_path.from
+        };
+        current_seq.consume(&current_path, inverse);
+        let collected_all_keys = current_seq.has_all_keys_from_set(&base_key_sets[0])
+            && current_seq.has_all_keys_from_set(&base_key_sets[1])
+            && current_seq.has_all_keys_from_set(&base_key_sets[2])
+            && current_seq.has_all_keys_from_set(&base_key_sets[3]);
+        if collected_all_keys {
+            if current_seq.cost < min_sequence.cost {
+                min_sequence = current_seq;
+            }
+            continue;
+        }
+        let mut state = String::new();
+        for quad in 0..4 {
+            state.push(positions[quad]);
+        }
+        let sorted_keys_str: String = current_seq.keys.iter().collect();
+        let mut sorted_keys: Vec<char> = sorted_keys_str.chars().collect();
+        sorted_keys.sort();
+        for k in sorted_keys {
+            state.push(k);
+        }
+        if state_cache.contains_key(&state) && state_cache[&state] <= current_seq.cost {
+            // We've already been here in this state before with an equal or lower cost.
+            // No need to do the calculation again.
+            continue;
+        }
+        for quad in 0..4 {
+            for destination in &base_key_sets[quad] {
+                if !current_seq.keys.contains(&destination) {
+                    let mut ft_key = from_to_key(atoi(positions[quad]), atoi(*destination));
+                    let mut next_inverse = false;
+                    if !path_memos[quad].contains_key(&ft_key) {
+                        ft_key = from_to_key(atoi(*destination), atoi(positions[quad]));
+                        next_inverse = true;
+                    }
+                    if path_memos[quad].contains_key(&ft_key) {
+                        for next_path in &path_memos[quad][&ft_key] {
+                            if is_viable(
+                                positions[quad],
+                                *destination,
+                                &current_seq.keys,
+                                next_path,
+                            ) {
+                                q.push_back((
+                                    current_seq.clone(),
+                                    next_path.clone(),
+                                    next_inverse,
+                                    quad,
+                                    positions.clone(),
+                                ));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        state_cache.insert(state, current_seq.cost);
+    }
+}
+
 pub fn find_keys(
     img: &Vec<char>,
     w: usize,
@@ -108,9 +281,8 @@ pub fn find_keys(
             q.push_back((MapSequence::new(), path.clone(), false))
         }
     }
-    let mut max = MapSequence::new();
-    max.cost = usize::max_value();
-    let mut min_sequence = max;
+    let mut min_sequence = MapSequence::new();
+    min_sequence.cost = usize::max_value();
     let mut state_cache = HashMap::<String, usize>::new();
     loop {
         if q.len() == 0 {
@@ -142,7 +314,8 @@ pub fn find_keys(
             state.push(k);
         }
         if state_cache.contains_key(&state) && state_cache[&state] <= current_seq.cost {
-            // We've already been here in this state before. No need to do the calculation again.
+            // We've already been here in this state before with an equal or lower cost.
+            // No need to do the calculation again.
             continue;
         }
         for destination in &base_key_set {
@@ -283,6 +456,53 @@ pub fn calc_paths(
             q.push_back((state, e_test));
         }
     }
+}
+
+pub fn read_quads(
+    input: &'static str,
+) -> Result<(Vec<(Vec<char>, HashMap<char, Point>)>, usize, usize)> {
+    let (img, w, h, _) = read(input).unwrap();
+    let mut res_imgs = Vec::<(Vec<char>, HashMap<char, Point>)>::new();
+
+    //q1
+    let (q1_img, q1_lut) = read_quad(&img, w, 0, h / 2, w / 2, w - 1);
+    res_imgs.push((q1_img, q1_lut));
+
+    //q2
+    let (q2_img, q2_lut) = read_quad(&img, w, 0, h / 2, 0, w / 2);
+    res_imgs.push((q2_img, q2_lut));
+
+    //q3
+    let (q3_img, q3_lut) = read_quad(&img, w, h / 2, h - 1, 0, w / 2);
+    res_imgs.push((q3_img, q3_lut));
+
+    //q4
+    let (q4_img, q4_lut) = read_quad(&img, w, h / 2, h - 1, w / 2, w - 1);
+    res_imgs.push((q4_img, q4_lut));
+
+    return Ok((res_imgs, w / 2 + 1, h / 2 + 1));
+}
+
+fn read_quad(
+    img: &Vec<char>,
+    w: usize,
+    y_lo: usize,
+    y_hi: usize,
+    x_lo: usize,
+    x_hi: usize,
+) -> (Vec<char>, HashMap<char, Point>) {
+    let mut q_img = Vec::<char>::new();
+    let mut q_lut = HashMap::<char, Point>::new();
+    for y in y_lo..=y_hi {
+        for x in x_lo..=x_hi {
+            let c = img[y * w + x];
+            q_img.push(c);
+            if is_alpha(c) || c == '@' {
+                q_lut.insert(c, Point::new((x - x_lo) as i32, (y - y_lo) as i32));
+            }
+        }
+    }
+    (q_img, q_lut)
 }
 
 pub fn read(input: &'static str) -> Result<(Vec<char>, usize, usize, HashMap<char, Point>)> {
