@@ -47,7 +47,7 @@ Day | Part 1 | Part 2 | Comments
 17 | :heavy_check_mark: | :heavy_check_mark: | Solve by hand: 2 minutes. Solve programmatically: 2 hours
 18 | :heavy_check_mark: | :heavy_check_mark: | My brain hurts
 19 | :heavy_check_mark: | :heavy_check_mark: | 
-20 | | | 
+20 | :heavy_check_mark: | | 
 21 | | | 
 22 | | | 
 23 | | | 
