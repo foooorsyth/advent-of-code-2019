@@ -44,7 +44,7 @@ fn shortest_path(
             continue;
         }
 
-        if node.parent != "" {
+        if node.parent != "".to_string() {
             check_dist(lut, &mut dist, &mut heap, &node.parent, cost);
         }
 
@@ -80,7 +80,7 @@ fn count_orbits(storage: &mut Vec<UTreeNode>, lut: &HashMap<String, usize>) -> i
         let mut node = &mut storage.get_mut(lut[node_id]).unwrap();
         if !node.visited {
             node.visited = true;
-            count += depth;
+            count += *depth;
             for child_id in &node.children {
                 stack.push((child_id.to_string(), depth + 1));
             }

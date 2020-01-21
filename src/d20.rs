@@ -167,10 +167,10 @@ fn read(
                     label.push(c);
                     label.push(img[y * w + x + 1]);
                     let p = Point::new((x + 2) as i32, y as i32);
-                    if label == "AA" {
+                    if label == "AA".to_string() {
                         start = p.clone();
                     }
-                    if label == "ZZ" {
+                    if label == "ZZ".to_string() {
                         end = p.clone();
                     }
                     if !portals_inverse.contains_key(&label) {
@@ -187,10 +187,10 @@ fn read(
                     label.push(c);
                     label.push(img[(y + 1) * w + x]);
                     let p = Point::new(x as i32, (y + 2) as i32);
-                    if label == "AA" {
+                    if label == "AA".to_string() {
                         start = p.clone();
                     }
-                    if label == "ZZ" {
+                    if label == "ZZ".to_string() {
                         end = p.clone();
                     }
                     if !portals_inverse.contains_key(&label) {
@@ -207,10 +207,10 @@ fn read(
                     label.push(c);
                     label.push(img[y * w + x + 1]);
                     let p = Point::new((x - 1) as i32, y as i32);
-                    if label == "AA" {
+                    if label == "AA".to_string() {
                         start = p.clone();
                     }
-                    if label == "ZZ" {
+                    if label == "ZZ".to_string() {
                         end = p.clone();
                     }
                     if !portals_inverse.contains_key(&label) {
@@ -227,10 +227,10 @@ fn read(
                     label.push(c);
                     label.push(img[(y + 1) * w + x]);
                     let p = Point::new(x as i32, (y - 1) as i32);
-                    if label == "AA" {
+                    if label == "AA".to_string() {
                         start = p.clone();
                     }
-                    if label == "ZZ" {
+                    if label == "ZZ".to_string() {
                         end = p.clone();
                     }
                     if !portals_inverse.contains_key(&label) {

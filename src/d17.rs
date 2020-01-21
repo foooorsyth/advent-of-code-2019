@@ -228,7 +228,7 @@ fn longest_repeated(input: &String, min_len: usize, max_len: usize) -> Vec<Subst
                     sub.clone(),
                     Substring {
                         val: sub.clone(),
-                        start: start,
+                        start,
                         len: end - start,
                     },
                 );

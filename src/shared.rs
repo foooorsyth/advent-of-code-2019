@@ -9,7 +9,7 @@ pub struct Point {
 
 impl Point {
     pub fn new(x: i32, y: i32) -> Point {
-        return Point { x: x, y: y };
+        return Point { x, y };
     }
 
     pub const fn origin() -> Point {
@@ -88,7 +88,7 @@ pub struct UTreeNode {
 impl UTreeNode {
     pub fn new(parent: String, val: String) -> UTreeNode {
         return UTreeNode {
-            parent: parent,
+            parent,
             value: val,
             children: Vec::new(),
             visited: false,

@@ -80,8 +80,8 @@ pub struct MapPath {
 impl MapPath {
     fn new(from: char, to: char) -> MapPath {
         return MapPath {
-            from: from,
-            to: to,
+            from,
+            to,
             cost: 0,
             keys: HashMap::new(),
             doors: HashMap::new(),

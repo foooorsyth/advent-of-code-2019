@@ -86,7 +86,7 @@ pub fn find_station(
     let mut lut: HashMap<String, BinaryHeap<PointDist>> = HashMap::new();
     for y in 0..*h {
         for x in 0..*w {
-            let station_tmp = Point { x: x, y: y };
+            let station_tmp = Point { x, y: y };
             let asteroid_lookup = asteroid_metadata(&mut img.clone(), *w, *h, &station_tmp);
             let visible = asteroid_lookup.keys().len() as i32;
             if visible > max_visible {

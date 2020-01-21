@@ -12,9 +12,9 @@ struct Meta {
 impl Meta {
     fn new(snapshot: IntCodeCPU, val: i64, depth: i64) -> Meta {
         return Meta {
-            snapshot: snapshot,
-            val: val,
-            depth: depth,
+            snapshot,
+            val,
+            depth,
         };
     }
 }

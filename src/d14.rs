@@ -37,7 +37,7 @@ fn binary_search(reactions: &HashMap<String, Reaction>, low: i64, hi: i64, targe
     } else if ore_sum < target {
         return binary_search(&reactions, midpoint, hi, target);
     } else {
-        return midpoint;
+        midpoint
     }
 }
 
@@ -110,7 +110,7 @@ struct Chemical {
 
 impl Chemical {
     fn new(key: String, qty: i64) -> Chemical {
-        Chemical { key: key, qty: qty }
+        Chemical { key, qty }
     }
     fn empty() -> Chemical {
         Chemical {
