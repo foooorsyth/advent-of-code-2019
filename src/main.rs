@@ -283,6 +283,12 @@ mod tests {
         let res_d20_p1 = d20::part1().unwrap();
         assert_eq!(res_d20_p1, 714);
     }
+
+    #[test]
+    fn test_d20_p2() {
+        let res_d20_p2 = d20::part2().unwrap();
+        assert_eq!(res_d20_p2, 7876);
+    }
 }
 
 fn main() {
@@ -409,6 +415,8 @@ fn main() {
         20 => {
             let res_d20_p1 = d20::part1().unwrap();
             println!("d20_p1: {}", res_d20_p1);
+            let res_d20_p2 = d20::part2().unwrap();
+            println!("d20_p2: {}", res_d20_p2);
         }
         _ => println!("Invalid day"),
     }

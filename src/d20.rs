@@ -35,6 +35,67 @@ pub fn part1() -> Result<usize> {
     }
 }
 
+pub fn part2() -> Result<usize> {
+    let (img, w, h, portals, start, end) = read("input/d20.txt")?;
+    let mut q = VecDeque::<(
+        Point,
+        /* step depth */ usize,
+        /*maze level*/ usize,
+    )>::new();
+    let mut levels = Vec::<Vec<char>>::new();
+    levels.push(img.clone());
+    let near = neighbors(&start);
+    for p in near {
+        if levels[0][(p.y as usize) * w + (p.x as usize)] == '.' {
+            q.push_back((p.clone(), 1, 0));
+        }
+    }
+    levels[0][(start.y as usize) * w + (start.x as usize)] = '#'; // mark visited
+    loop {
+        if q.len() == 0 {
+            panic!("couldn't find end");
+        }
+        let current = q.pop_front().unwrap();
+        let current_pt = current.0;
+        let step_depth = current.1;
+        let maze_level = current.2;
+        if levels.len() == maze_level {
+            levels.push(img.clone());
+        }
+        levels[maze_level][(current_pt.y as usize) * w + (current_pt.x as usize)] = '#'; // mark visited
+        let near = neighbors(&current_pt);
+        for p in near {
+            if p == end && maze_level == 0 {
+                return Ok(step_depth + 1);
+            }
+            let c = levels[maze_level][(p.y as usize) * w + (p.x as usize)];
+            if c == '.' {
+                q.push_back((p.clone(), step_depth + 1, maze_level));
+            } else if is_alpha(c) {
+                if current_pt == start || (current_pt == end && maze_level != 0) {
+                    continue;
+                }
+                let dest = portals[&current_pt.to_string()];
+                if maze_level == 0 {
+                    if is_inner(&current_pt, w, h) {
+                        q.push_back((dest.clone(), step_depth + 1, maze_level + 1));
+                    }
+                } else {
+                    if is_inner(&current_pt, w, h) {
+                        q.push_back((dest.clone(), current.1 + 1, maze_level + 1));
+                    } else {
+                        q.push_back((dest.clone(), current.1 + 1, maze_level - 1));
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn is_inner(p: &Point, w: usize, h: usize) -> bool {
+    p.x != 2 && p.y != 2 && p.x != ((w - 3) as i32) && p.y != ((h - 3) as i32)
+}
+
 fn neighbors(p: &Point) -> Vec<Point> {
     let mut res = Vec::new();
     // n
