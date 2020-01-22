@@ -1,3 +1,4 @@
+use crate::shared::atoi;
 use std::collections::VecDeque;
 use std::fs;
 
@@ -111,6 +112,12 @@ impl IntCodeCPU {
 
     pub fn enqueue_input(&mut self, input: i64) {
         self.input.push_back(input);
+    }
+
+    pub fn enqueue_ascii(&mut self, ascii_string: String) {
+        ascii_string
+            .chars()
+            .for_each(|c| self.input.push_back(atoi(c)));
     }
 
     pub fn has_input(&mut self) -> bool {

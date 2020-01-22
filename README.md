@@ -48,7 +48,7 @@ Day | Part 1 | Part 2 | Comments
 18 | :heavy_check_mark: | :heavy_check_mark: | My brain hurts
 19 | :heavy_check_mark: | :heavy_check_mark: | 
 20 | :heavy_check_mark: | :heavy_check_mark: | Enough with the BFS
-21 | | | 
+21 | :heavy_check_mark: | | 
 22 | | | 
 23 | | | 
 24 | | | 

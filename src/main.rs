@@ -11,6 +11,7 @@ mod d18;
 mod d19;
 mod d2;
 mod d20;
+mod d21;
 mod d3;
 mod d4;
 mod d5;
@@ -38,6 +39,7 @@ mod tests {
     use crate::d19;
     use crate::d2;
     use crate::d20;
+    use crate::d21;
     use crate::d3;
     use crate::d4;
     use crate::d5;
@@ -289,6 +291,12 @@ mod tests {
         let res_d20_p2 = d20::part2().unwrap();
         assert_eq!(res_d20_p2, 7876);
     }
+
+    #[test]
+    fn test_d21_p1() {
+        let res_d21_p1 = d21::part1().unwrap();
+        assert_eq!(res_d21_p1, 19355227);
+    }
 }
 
 fn main() {
@@ -417,6 +425,10 @@ fn main() {
             println!("d20_p1: {}", res_d20_p1);
             let res_d20_p2 = d20::part2().unwrap();
             println!("d20_p2: {}", res_d20_p2);
+        }
+        21 => {
+            let res_d21_p1 = d21::part1().unwrap();
+            println!("d21_p1: {}", res_d21_p1);
         }
         _ => println!("Invalid day"),
     }
