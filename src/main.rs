@@ -41,6 +41,7 @@ mod tests {
     use crate::d2;
     use crate::d20;
     use crate::d21;
+    use crate::d22;
     use crate::d3;
     use crate::d4;
     use crate::d5;
@@ -303,6 +304,12 @@ mod tests {
     fn test_d21_p2() {
         let res_d21_p2 = d21::part2().unwrap();
         assert_eq!(res_d21_p2, 1143802926);
+    }
+
+    #[test]
+    fn test_d22_p1() {
+        let res_d22_p1 = d22::part1().unwrap();
+        assert_eq!(res_d22_p1, 6696);
     }
 }
 
