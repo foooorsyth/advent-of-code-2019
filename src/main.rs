@@ -12,6 +12,7 @@ mod d19;
 mod d2;
 mod d20;
 mod d21;
+mod d22;
 mod d3;
 mod d4;
 mod d5;
@@ -437,6 +438,10 @@ fn main() {
             println!("d21_p1: {}", res_d21_p1);
             let res_d21_p2 = d21::part2().unwrap();
             println!("d21_p2: {}", res_d21_p2);
+        }
+        22 => {
+            let res_d22_p1 = d22::part1().unwrap();
+            println!("d22_p1: {}", res_d22_p1);
         }
         _ => println!("Invalid day"),
     }
