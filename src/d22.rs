@@ -48,6 +48,14 @@ impl Deck {
         self.chain(1, -n);
     }
 
+    pub fn position_of(&self, card: i128) -> i128 {
+        let mut idx = (self.slope * card + self.intercept) % self.size;
+        if idx < 0 {
+            idx = idx + self.size;
+        }
+        self.cards[idx as usize]
+    }
+
     pub fn to_string(&self) -> String {
         let mut res = String::new();
         for i in 0..self.size {
@@ -81,15 +89,36 @@ impl IndexMut<i128> for Deck {
     }
 }
 
-pub fn part1() -> Result<usize> {
+pub fn part1() -> Result<i128> {
     let mut deck = Deck::new(10007);
     execute(&mut deck, &read("input/d22.txt").unwrap());
-    for i in 0..deck.cards.len() {
-        if deck[i as i128] == 2019 {
-            return Ok(i);
+    Ok(deck.position_of(2019))
+}
+
+fn execute(deck: &mut Deck, instructions: &Vec<String>) {
+    instructions.iter().for_each(|instruction| {
+        if instruction.starts_with("cut ") {
+            let (_, num_str) = instruction.split_at(3);
+            let num = num_str.trim().parse::<i128>().unwrap();
+            deck.cut(num);
+        } else if instruction.starts_with("deal with increment ") {
+            let (_, num_str) = instruction.split_at("deal with increment ".len() - 1);
+            let num = num_str.trim().parse::<i128>().unwrap();
+            deck.deal_with_increment(num);
+        } else if instruction.starts_with("deal into new stack") {
+            deck.deal_into_new_stack();
         }
-    }
-    panic!("couldn't find card 2019");
+    });
+}
+
+fn read(input: &'static str) -> Result<Vec<String>> {
+    let file = File::open(input)?;
+    let reader = BufReader::new(file);
+    let mut res = Vec::new();
+    reader
+        .lines()
+        .for_each(|line| res.push(line.unwrap().to_string()));
+    Ok(res)
 }
 
 #[test]
@@ -161,30 +190,4 @@ fn mod_arith_chain4() {
     deck.deal_with_increment(3);
     deck.cut(-1);
     assert_eq!(deck.to_string(), "9 2 5 8 1 4 7 0 3 6");
-}
-
-fn execute(deck: &mut Deck, instructions: &Vec<String>) {
-    instructions.iter().for_each(|instruction| {
-        if instruction.starts_with("cut ") {
-            let (_, num_str) = instruction.split_at(3);
-            let num = num_str.trim().parse::<i128>().unwrap();
-            deck.cut(num);
-        } else if instruction.starts_with("deal with increment ") {
-            let (_, num_str) = instruction.split_at("deal with increment ".len() - 1);
-            let num = num_str.trim().parse::<i128>().unwrap();
-            deck.deal_with_increment(num);
-        } else if instruction.starts_with("deal into new stack") {
-            deck.deal_into_new_stack();
-        }
-    });
-}
-
-fn read(input: &'static str) -> Result<Vec<String>> {
-    let file = File::open(input)?;
-    let reader = BufReader::new(file);
-    let mut res = Vec::new();
-    reader
-        .lines()
-        .for_each(|line| res.push(line.unwrap().to_string()));
-    Ok(res)
 }
