@@ -309,7 +309,13 @@ mod tests {
     #[test]
     fn test_d22_p1() {
         let res_d22_p1 = d22::part1().unwrap();
-        assert_eq!(res_d22_p1, 6696);
+        assert_eq!(res_d22_p1, "6696");
+    }
+
+    #[test]
+    fn test_d22_p2() {
+        let res_d22_p2 = d22::part2().unwrap();
+        assert_eq!(res_d22_p2, "93750418158025");
     }
 }
 
@@ -449,6 +455,8 @@ fn main() {
         22 => {
             let res_d22_p1 = d22::part1().unwrap();
             println!("d22_p1: {}", res_d22_p1);
+            let res_d22_p2 = d22::part2().unwrap();
+            println!("d22_p2: {}", res_d22_p2);
         }
         _ => println!("Invalid day"),
     }
