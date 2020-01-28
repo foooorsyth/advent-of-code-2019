@@ -22,10 +22,6 @@ So, ```cargo run --release -- 7``` will execute Parts 1 and 2 from Day 7
 * Set ```// Day to debug``` arg in .vscode/launch.json
 * Press F5
 
-**Constraints:**
-
-Standard lib only. No external crates.
-
 Day | Part 1 | Part 2 | Comments
 --- | ------- | ------- | --- 
 1 | :heavy_check_mark: | :heavy_check_mark: | 
