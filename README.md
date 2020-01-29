@@ -46,6 +46,6 @@ Day | Part 1 | Part 2 | Comments
 20 | :heavy_check_mark: | :heavy_check_mark: | Enough with the BFS
 21 | :heavy_check_mark: | :heavy_check_mark: | Thanks, DeMorgan 
 22 | :heavy_check_mark: | :heavy_check_mark: | https://i.redd.it/047ti52dd9641.jpg
-23 | | | 
+23 | :heavy_check_mark: | | 
 24 | | | 
 25 | | | 

@@ -124,6 +124,10 @@ impl IntCodeCPU {
         return self.input.len() > 0;
     }
 
+    pub fn has_output(&mut self) -> bool {
+        return self.output.len() > 0;
+    }
+
     pub fn reset(&mut self, data: Vec<i64>) {
         self.set_mem(data);
         self.instr_ptr = 0;
