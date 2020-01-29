@@ -47,5 +47,5 @@ Day | Part 1 | Part 2 | Comments
 21 | :heavy_check_mark: | :heavy_check_mark: | Thanks, DeMorgan 
 22 | :heavy_check_mark: | :heavy_check_mark: | https://i.redd.it/047ti52dd9641.jpg
 23 | :heavy_check_mark: | :heavy_check_mark: | 
-24 | | | 
+24 | :heavy_check_mark: | | 
 25 | | | 

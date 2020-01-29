@@ -1,4 +1,4 @@
-use crate::shared::{is_alpha, Point};
+use crate::shared::{is_alpha, neighbors, Point};
 use std::collections::{HashMap, VecDeque};
 use std::fs::File;
 use std::io::{BufRead, BufReader, Result};
@@ -94,19 +94,6 @@ pub fn part2() -> Result<usize> {
 
 fn is_inner(p: &Point, w: usize, h: usize) -> bool {
     p.x != 2 && p.y != 2 && p.x != ((w - 3) as i32) && p.y != ((h - 3) as i32)
-}
-
-fn neighbors(p: &Point) -> Vec<Point> {
-    let mut res = Vec::new();
-    // n
-    res.push(Point::new(p.x, p.y - 1));
-    // e
-    res.push(Point::new(p.x + 1, p.y));
-    // s
-    res.push(Point::new(p.x, p.y + 1));
-    // w
-    res.push(Point::new(p.x - 1, p.y));
-    res
 }
 
 fn read(

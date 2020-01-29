@@ -331,3 +331,16 @@ pub fn set_pixel_at(img: &mut Vec<u8>, w: i32, p: &Point, val: u8) {
 pub fn in_bounds(w: usize, h: usize, p: &Point) -> bool {
     p.x >= 0 && p.x < (w as i32) && p.y >= 0 && p.y < (h as i32)
 }
+
+pub fn neighbors(p: &Point) -> Vec<Point> {
+    let mut res = Vec::new();
+    // n
+    res.push(Point::new(p.x, p.y - 1));
+    // e
+    res.push(Point::new(p.x + 1, p.y));
+    // s
+    res.push(Point::new(p.x, p.y + 1));
+    // w
+    res.push(Point::new(p.x - 1, p.y));
+    res
+}
