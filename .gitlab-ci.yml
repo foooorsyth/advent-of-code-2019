@@ -1,4 +1,4 @@
-image: "rust:latest"
+image: "rust:1.41.0"
 
 stages:
   - format
@@ -8,7 +8,7 @@ stages:
 format:
   stage: format
   script:
-    - rustup component add rustfmt --toolchain 1.40.0-x86_64-unknown-linux-gnu
+    - rustup component add rustfmt --toolchain 1.41.0-x86_64-unknown-linux-gnu
     - rustc --version && cargo --version  # Print version info for debugging
     - cargo fmt -- --check
 
