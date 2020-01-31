@@ -339,6 +339,12 @@ mod tests {
         let res_d24_p1 = d24::part1().unwrap();
         assert_eq!(res_d24_p1, 20751345);
     }
+
+    #[test]
+    fn test_d24_p2() {
+        let res_d24_p2 = d24::part2().unwrap();
+        assert_eq!(res_d24_p2, 1983);
+    }
 }
 
 fn main() {
@@ -489,6 +495,8 @@ fn main() {
         24 => {
             let res_d24_p1 = d24::part1().unwrap();
             println!("d24_p1: {}", res_d24_p1);
+            let res_d24_p2 = d24::part2().unwrap();
+            println!("d24_p2: {}", res_d24_p2);
         }
         _ => println!("Invalid day"),
     }
