@@ -1,4 +1,4 @@
-use crate::shared::atoi;
+use crate::shared::{atoi, itoa};
 use std::collections::VecDeque;
 use std::fs;
 
@@ -118,6 +118,10 @@ impl IntCodeCPU {
         ascii_string
             .chars()
             .for_each(|c| self.input.push_back(atoi(c)));
+    }
+
+    pub fn read_ascii_output(&mut self) -> String {
+        self.output.clone().iter().map(|i| itoa(*i)).collect()
     }
 
     pub fn has_input(&mut self) -> bool {

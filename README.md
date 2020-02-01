@@ -1,4 +1,4 @@
-# Advent of Code 2019 in Rust
+# Advent of Code 2019 in Rust (All 50 Stars)
 https://adventofcode.com/2019
 
 ![Advent of Code](https://i.imgur.com/gRDcR6a.jpg)
@@ -48,4 +48,4 @@ Day | Part 1 | Part 2 | Comments
 22 | :heavy_check_mark: | :heavy_check_mark: | https://i.redd.it/047ti52dd9641.jpg
 23 | :heavy_check_mark: | :heavy_check_mark: | 
 24 | :heavy_check_mark: | :heavy_check_mark: | https://i.imgur.com/wUXpjIL.jpg
-25 | | | 
+25 | :heavy_check_mark: | :heavy_check_mark: | https://i.imgur.com/9eAuz44.jpg

@@ -27,7 +27,7 @@ pub fn part2() -> std::io::Result<i64> {
 
 fn find(cpu: &mut IntCodeCPU, snapshot: &IntCodeCPU) -> (i64, i64) {
     let mut y = 0;
-    'y_loop: loop {
+    loop {
         'x_loop: for x in 0..=y {
             cpu.enqueue_input(x as i64);
             cpu.enqueue_input(y as i64);
